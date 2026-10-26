@@ -5,6 +5,7 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.42.0';
 import { corsHeaders, handleCors } from '../_shared/cors.ts';
+import { resolveGroqModel, DEFAULT_GROQ_MODEL } from '../_shared/groq.ts';
 
 interface ExplainSchemeRequestBody {
   scheme_id?: string;
@@ -31,8 +32,6 @@ interface ExplainSchemeRequestBody {
     age?: number;
   };
 }
-
-const DEFAULT_GROQ_MODEL = 'llama-3.3-70b-versatile';
 
 serve(async (req: Request) => {
   const corsResponse = handleCors(req);
@@ -143,7 +142,6 @@ serve(async (req: Request) => {
     });
 
     const groqApiKey = Deno.env.get('GROQ_API_KEY');
-    const groqModel = Deno.env.get('GROQ_MODEL') || DEFAULT_GROQ_MODEL;
 
     if (!groqApiKey || groqApiKey.trim() === '' || groqApiKey.includes('your_')) {
       return new Response(
@@ -151,6 +149,9 @@ serve(async (req: Request) => {
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    const preferredModel = Deno.env.get('GROQ_MODEL') || DEFAULT_GROQ_MODEL;
+    const groqModel = await resolveGroqModel(groqApiKey, preferredModel);
 
     // 4. Construct Prompt
     const systemPrompt = `You are NammaSeve AI, a trusted civic assistant explaining Indian government welfare schemes to citizens.

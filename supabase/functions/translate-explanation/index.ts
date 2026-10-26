@@ -4,14 +4,13 @@
 
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import { corsHeaders, handleCors } from '../_shared/cors.ts';
+import { resolveGroqModel, DEFAULT_GROQ_MODEL } from '../_shared/groq.ts';
 
 interface TranslateRequestBody {
   text: string;
   target_language: 'en' | 'kn';
   context_type?: 'scheme_summary' | 'eligibility_rule' | 'application_step' | 'general';
 }
-
-const DEFAULT_MODEL = 'llama-3.3-70b-versatile';
 
 serve(async (req: Request) => {
   const corsResponse = handleCors(req);
@@ -43,7 +42,6 @@ serve(async (req: Request) => {
     }
 
     const groqApiKey = Deno.env.get('GROQ_API_KEY');
-    const groqModel = Deno.env.get('GROQ_MODEL') || DEFAULT_MODEL;
 
     // Graceful fallback if Groq API key is not configured yet
     if (!groqApiKey || groqApiKey.trim() === '' || groqApiKey === 'your_actual_key') {
@@ -57,6 +55,9 @@ serve(async (req: Request) => {
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    const preferredModel = Deno.env.get('GROQ_MODEL') || DEFAULT_GROQ_MODEL;
+    const groqModel = await resolveGroqModel(groqApiKey, preferredModel);
 
     const systemPrompt = `You are a professional civic translator for NammaSeve (Karnataka & Indian Civic Portal).
 Your task is to accurately translate government scheme content into ${target_language === 'kn' ? 'Kannada (ಕನ್ನಡ)' : 'English'}.

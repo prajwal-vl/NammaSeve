@@ -203,7 +203,7 @@ Migration files:
 ```powershell
 # Configure Groq credentials server-side
 npx supabase secrets set GROQ_API_KEY="your_actual_groq_api_key_here"
-npx supabase secrets set GROQ_MODEL="openai/gpt-oss-120b"
+npx supabase secrets set GROQ_MODEL="llama-3.3-70b-versatile"
 
 # Deploy Edge Functions
 npx supabase functions deploy discover-schemes --no-verify-jwt

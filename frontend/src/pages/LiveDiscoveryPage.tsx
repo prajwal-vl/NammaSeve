@@ -252,7 +252,7 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
               </p>
               <div className="p-3 bg-white/80 rounded-xl border border-amber-200 text-xs font-mono text-slate-700">
                 supabase secrets set GROQ_API_KEY="your_actual_groq_api_key"<br />
-                supabase secrets set GROQ_MODEL="openai/gpt-oss-120b"
+                supabase secrets set GROQ_MODEL="llama-3.3-70b-versatile"
               </div>
               <p className="text-xs text-amber-700">
                 In adherence to our strict zero-fabrication requirement, NammaSeve will never show fake sample schemes.
