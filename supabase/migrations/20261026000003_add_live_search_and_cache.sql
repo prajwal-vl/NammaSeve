@@ -31,6 +31,23 @@ CREATE INDEX IF NOT EXISTS idx_search_history_user ON public.search_history(user
 CREATE INDEX IF NOT EXISTS idx_search_history_created ON public.search_history(created_at DESC);
 
 -- 3. Extend Saved Schemes to support both catalog schemes and live-discovered web schemes
+DO $$
+BEGIN
+    -- Safely handle primary key if it was composite (user_id, scheme_id)
+    IF EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE table_name = 'saved_schemes' AND constraint_type = 'PRIMARY KEY'
+        AND constraint_name = 'saved_schemes_pkey'
+    ) THEN
+        ALTER TABLE public.saved_schemes DROP CONSTRAINT saved_schemes_pkey;
+        ALTER TABLE public.saved_schemes ADD COLUMN IF NOT EXISTS id UUID DEFAULT uuid_generate_v4();
+        ALTER TABLE public.saved_schemes ADD PRIMARY KEY (id);
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        NULL;
+END $$;
+
 ALTER TABLE public.saved_schemes ALTER COLUMN scheme_id DROP NOT NULL;
 ALTER TABLE public.saved_schemes ADD COLUMN IF NOT EXISTS scheme_key TEXT;
 ALTER TABLE public.saved_schemes ADD COLUMN IF NOT EXISTS scheme_data JSONB;
@@ -44,10 +61,12 @@ ALTER TABLE public.search_result_cache ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.search_history ENABLE ROW LEVEL SECURITY;
 
 -- Search Result Cache Policies: Public can read valid cached searches
+DROP POLICY IF EXISTS "Public can read search cache" ON public.search_result_cache;
 CREATE POLICY "Public can read search cache"
     ON public.search_result_cache FOR SELECT
     USING (expires_at > timezone('utc'::text, now()));
 
+DROP POLICY IF EXISTS "Service role can manage search cache" ON public.search_result_cache;
 CREATE POLICY "Service role can manage search cache"
     ON public.search_result_cache FOR ALL
     USING (
@@ -56,14 +75,17 @@ CREATE POLICY "Service role can manage search cache"
     );
 
 -- Search History Policies: Strict user ownership
+DROP POLICY IF EXISTS "Users can view their own search history" ON public.search_history;
 CREATE POLICY "Users can view their own search history"
     ON public.search_history FOR SELECT
     USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can insert their own search history" ON public.search_history;
 CREATE POLICY "Users can insert their own search history"
     ON public.search_history FOR INSERT
     WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can delete their own search history" ON public.search_history;
 CREATE POLICY "Users can delete their own search history"
     ON public.search_history FOR DELETE
     USING (auth.uid() = user_id);

@@ -42,6 +42,7 @@ CREATE INDEX IF NOT EXISTS idx_schemes_source_id ON public.schemes(source_identi
 ALTER TABLE public.ingestion_runs ENABLE ROW LEVEL SECURITY;
 
 -- Admins and service role can read ingestion runs
+DROP POLICY IF EXISTS "Admins can view ingestion runs" ON public.ingestion_runs;
 CREATE POLICY "Admins can view ingestion runs"
     ON public.ingestion_runs FOR SELECT
     USING (
@@ -51,6 +52,7 @@ CREATE POLICY "Admins can view ingestion runs"
     );
 
 -- System and authorized admins can insert and update ingestion runs
+DROP POLICY IF EXISTS "Admins and service role can insert ingestion runs" ON public.ingestion_runs;
 CREATE POLICY "Admins and service role can insert ingestion runs"
     ON public.ingestion_runs FOR INSERT
     WITH CHECK (
@@ -59,6 +61,7 @@ CREATE POLICY "Admins and service role can insert ingestion runs"
         auth.uid() IS NOT NULL
     );
 
+DROP POLICY IF EXISTS "Admins and service role can update ingestion runs" ON public.ingestion_runs;
 CREATE POLICY "Admins and service role can update ingestion runs"
     ON public.ingestion_runs FOR UPDATE
     USING (

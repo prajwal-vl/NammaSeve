@@ -60,6 +60,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+DROP TRIGGER IF EXISTS update_profiles_updated_at ON public.profiles;
 CREATE TRIGGER update_profiles_updated_at
     BEFORE UPDATE ON public.profiles
     FOR EACH ROW
@@ -113,6 +114,7 @@ CREATE TABLE IF NOT EXISTS public.schemes (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
+DROP TRIGGER IF EXISTS update_schemes_updated_at ON public.schemes;
 CREATE TRIGGER update_schemes_updated_at
     BEFORE UPDATE ON public.schemes
     FOR EACH ROW
@@ -138,32 +140,34 @@ CREATE TABLE IF NOT EXISTS public.eligibility_rules (
     required_attribute VARCHAR(50) NOT NULL,
     operator VARCHAR(20) NOT NULL CHECK (operator IN ('eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'in', 'not_in', 'contains')),
     rule_value TEXT NOT NULL,
+    rule_description TEXT,
+    kannada_rule_description TEXT,
     source_reference TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
 CREATE INDEX IF NOT EXISTS idx_rules_scheme_id ON public.eligibility_rules(scheme_id);
-CREATE INDEX IF NOT EXISTS idx_rules_rule_type ON public.eligibility_rules(rule_type);
+CREATE INDEX IF NOT EXISTS idx_rules_attribute ON public.eligibility_rules(required_attribute);
+CREATE INDEX IF NOT EXISTS idx_rules_type ON public.eligibility_rules(rule_type);
 
--- 4. Scheme Sources Table (ZERO preseeded rows)
+-- 4. Scheme Sources & Provenance (Audit-traceable citations)
 CREATE TABLE IF NOT EXISTS public.scheme_sources (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     scheme_id UUID NOT NULL REFERENCES public.schemes(id) ON DELETE CASCADE,
-    source_url TEXT NOT NULL,
     publisher VARCHAR(150) NOT NULL,
-    source_type VARCHAR(50) NOT NULL CHECK (source_type IN ('official_portal', 'gazette', 'ministry_site', 'department_order')),
-    verification_status VARCHAR(20) NOT NULL DEFAULT 'verified' CHECK (verification_status IN ('verified', 'pending', 'stale', 'unverified')),
-    last_checked_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
-    last_verified_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
-    content_hash VARCHAR(64),
-    notes TEXT,
+    source_url TEXT NOT NULL,
+    source_type VARCHAR(50) NOT NULL CHECK (source_type IN ('official_portal', 'government_order', 'gazette_notification', 'open_data_api', 'department_press_release')),
+    document_reference_number VARCHAR(100),
+    publication_date DATE,
+    extracted_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    verified_by UUID REFERENCES auth.users(id),
+    verification_status VARCHAR(30) NOT NULL DEFAULT 'verified' CHECK (verification_status IN ('pending', 'verified', 'disputed', 'stale')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
 CREATE INDEX IF NOT EXISTS idx_sources_scheme_id ON public.scheme_sources(scheme_id);
-CREATE INDEX IF NOT EXISTS idx_sources_status ON public.scheme_sources(verification_status);
 
--- 5. Scheme Versions Table (Provenance & Change tracking)
+-- 5. Scheme Versions (Audit & History tracking)
 CREATE TABLE IF NOT EXISTS public.scheme_versions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     scheme_id UUID NOT NULL REFERENCES public.schemes(id) ON DELETE CASCADE,
@@ -177,12 +181,16 @@ CREATE INDEX IF NOT EXISTS idx_versions_scheme_id ON public.scheme_versions(sche
 
 -- 6. Saved Schemes Table
 CREATE TABLE IF NOT EXISTS public.saved_schemes (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
-    scheme_id UUID NOT NULL REFERENCES public.schemes(id) ON DELETE CASCADE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
-    PRIMARY KEY (user_id, scheme_id)
+    scheme_id UUID REFERENCES public.schemes(id) ON DELETE CASCADE,
+    scheme_key TEXT,
+    scheme_data JSONB,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS idx_saved_schemes_user_key 
+    ON public.saved_schemes (user_id, COALESCE(scheme_id::text, scheme_key));
 CREATE INDEX IF NOT EXISTS idx_saved_user_id ON public.saved_schemes(user_id);
 CREATE INDEX IF NOT EXISTS idx_saved_scheme_id ON public.saved_schemes(scheme_id);
 
@@ -197,6 +205,7 @@ CREATE TABLE IF NOT EXISTS public.audit_events (
 );
 
 CREATE INDEX IF NOT EXISTS idx_audit_event_type ON public.audit_events(event_type);
+CREATE INDEX IF NOT EXISTS idx_audit_user_id ON public.audit_events(user_id);
 CREATE INDEX IF NOT EXISTS idx_audit_created_at ON public.audit_events(created_at DESC);
 
 -- ============================================================================
@@ -212,28 +221,34 @@ ALTER TABLE public.saved_schemes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.audit_events ENABLE ROW LEVEL SECURITY;
 
 -- 1. Profiles Policies (Strict user ownership)
+DROP POLICY IF EXISTS "Users can view their own profile" ON public.profiles;
 CREATE POLICY "Users can view their own profile"
     ON public.profiles FOR SELECT
     USING (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Users can insert their own profile" ON public.profiles;
 CREATE POLICY "Users can insert their own profile"
     ON public.profiles FOR INSERT
     WITH CHECK (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Users can update their own profile" ON public.profiles;
 CREATE POLICY "Users can update their own profile"
     ON public.profiles FOR UPDATE
     USING (auth.uid() = id)
     WITH CHECK (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Users can delete their own profile" ON public.profiles;
 CREATE POLICY "Users can delete their own profile"
     ON public.profiles FOR DELETE
     USING (auth.uid() = id);
 
 -- 2. Schemes Policies (Public read for published; insert/update restricted)
+DROP POLICY IF EXISTS "Public can view published schemes" ON public.schemes;
 CREATE POLICY "Public can view published schemes"
     ON public.schemes FOR SELECT
     USING (status = 'published');
 
+DROP POLICY IF EXISTS "Authenticated users with admin role can manage schemes" ON public.schemes;
 CREATE POLICY "Authenticated users with admin role can manage schemes"
     ON public.schemes FOR ALL
     USING (
@@ -242,6 +257,7 @@ CREATE POLICY "Authenticated users with admin role can manage schemes"
     );
 
 -- 3. Eligibility Rules Policies
+DROP POLICY IF EXISTS "Public can view eligibility rules for published schemes" ON public.eligibility_rules;
 CREATE POLICY "Public can view eligibility rules for published schemes"
     ON public.eligibility_rules FOR SELECT
     USING (
@@ -252,6 +268,7 @@ CREATE POLICY "Public can view eligibility rules for published schemes"
         )
     );
 
+DROP POLICY IF EXISTS "Admins can manage eligibility rules" ON public.eligibility_rules;
 CREATE POLICY "Admins can manage eligibility rules"
     ON public.eligibility_rules FOR ALL
     USING (
@@ -260,6 +277,7 @@ CREATE POLICY "Admins can manage eligibility rules"
     );
 
 -- 4. Scheme Sources Policies
+DROP POLICY IF EXISTS "Public can view verified sources for published schemes" ON public.scheme_sources;
 CREATE POLICY "Public can view verified sources for published schemes"
     ON public.scheme_sources FOR SELECT
     USING (
@@ -271,6 +289,7 @@ CREATE POLICY "Public can view verified sources for published schemes"
         )
     );
 
+DROP POLICY IF EXISTS "Admins can manage scheme sources" ON public.scheme_sources;
 CREATE POLICY "Admins can manage scheme sources"
     ON public.scheme_sources FOR ALL
     USING (
@@ -279,6 +298,7 @@ CREATE POLICY "Admins can manage scheme sources"
     );
 
 -- 5. Scheme Versions Policies
+DROP POLICY IF EXISTS "Public can view versions of published schemes" ON public.scheme_versions;
 CREATE POLICY "Public can view versions of published schemes"
     ON public.scheme_versions FOR SELECT
     USING (
@@ -290,19 +310,23 @@ CREATE POLICY "Public can view versions of published schemes"
     );
 
 -- 6. Saved Schemes Policies
+DROP POLICY IF EXISTS "Users can view their saved schemes" ON public.saved_schemes;
 CREATE POLICY "Users can view their saved schemes"
     ON public.saved_schemes FOR SELECT
     USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can save schemes" ON public.saved_schemes;
 CREATE POLICY "Users can save schemes"
     ON public.saved_schemes FOR INSERT
     WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can delete saved schemes" ON public.saved_schemes;
 CREATE POLICY "Users can delete saved schemes"
     ON public.saved_schemes FOR DELETE
     USING (auth.uid() = user_id);
 
 -- 7. Audit Events Policies
+DROP POLICY IF EXISTS "System and users can insert audit events" ON public.audit_events;
 CREATE POLICY "System and users can insert audit events"
     ON public.audit_events FOR INSERT
     WITH CHECK (true);
