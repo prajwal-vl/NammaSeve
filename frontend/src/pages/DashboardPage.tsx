@@ -81,17 +81,17 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         <div>
           <div className="flex items-center gap-2 mb-1.5">
             <MaximalistBadge variant="green" size="sm">
-              Citizen Portal
+              {t('dashboard.portal_badge', 'Citizen Portal')}
             </MaximalistBadge>
             <span className="text-xs font-medium text-slate-500">
-              {user?.email ? user.email : 'Guest Discovery Session'}
+              {user?.email ? user.email : t('dashboard.guest_session', 'Guest Discovery Session')}
             </span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-heading font-extrabold text-slate-900 tracking-tight">
-            My Citizen Profile & Opportunities
+            {t('dashboard.title', 'My Citizen Profile & Opportunities')}
           </h1>
           <p className="text-sm sm:text-base text-slate-600 mt-1">
-            Personalized welfare discoveries based strictly on your voluntarily provided citizen criteria.
+            {t('dashboard.subtitle', 'Personalized welfare discoveries based strictly on your voluntarily provided citizen criteria.')}
           </p>
         </div>
 
@@ -101,7 +101,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             className="px-4 py-2.5 bg-saffron text-white hover:bg-saffron-600 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-sm transition-colors cursor-pointer"
           >
             <Edit3 className="w-4 h-4" />
-            <span>{profile ? 'Edit Profile' : 'Complete Profile'}</span>
+            <span>{profile ? t('dashboard.edit_profile', 'Edit Profile') : t('dashboard.complete_profile', 'Complete Profile')}</span>
           </button>
         </div>
       </div>
@@ -113,17 +113,17 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         <div className="p-6 bg-gradient-to-r from-saffron-50/80 to-white border border-saffron-200/80 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
           <div>
             <h3 className="text-lg font-heading font-bold text-slate-900">
-              Your Profile is Incomplete
+              {t('dashboard.incomplete_title', 'Your Profile is Incomplete')}
             </h3>
             <p className="text-sm text-slate-600 mt-1">
-              Add your age, district, and education details to unlock personalized deterministic scheme matching.
+              {t('dashboard.incomplete_desc', 'Add your age, district, and education details to unlock personalized deterministic scheme matching.')}
             </p>
           </div>
           <button
             onClick={onOpenProfile}
             className="px-5 py-2.5 bg-saffron text-white hover:bg-saffron-600 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-sm transition-colors cursor-pointer self-start"
           >
-            <span>Complete My Profile Now</span>
+            <span>{t('dashboard.complete_btn', 'Complete My Profile Now')}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -140,7 +140,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           }`}
         >
           <Sparkles className="w-4 h-4" />
-          <span>Recommended Matches</span>
+          <span>{t('dashboard.tab_recommended', 'Recommended Matches')}</span>
           {evaluations.length > 0 && (
             <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
               activeTab === 'recommended' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'
@@ -159,7 +159,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           }`}
         >
           <Bookmark className="w-4 h-4" />
-          <span>Saved Schemes ({savedSchemeIds.size})</span>
+          <span>{t('dashboard.tab_saved', 'Saved Schemes')} ({savedSchemeIds.size})</span>
         </button>
 
         <button
@@ -171,7 +171,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           }`}
         >
           <ShieldCheck className="w-4 h-4" />
-          <span>Privacy & Data Controls</span>
+          <span>{t('dashboard.tab_privacy', 'Privacy & Data Controls')}</span>
         </button>
       </div>
 
@@ -194,7 +194,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-indian-green" />
                     <h3 className="text-xl font-heading font-bold text-slate-900">
-                      Eligible Based on Available Information ({eligibleSchemes.length})
+                      {t('dashboard.eligible_title', 'Eligible Based on Available Information')} ({eligibleSchemes.length})
                     </h3>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -218,7 +218,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                   <div className="flex items-center gap-2">
                     <AlertCircle className="w-5 h-5 text-amber-600" />
                     <h3 className="text-xl font-heading font-bold text-slate-900">
-                      Potentially Eligible — Verification Required ({potentiallyEligibleSchemes.length})
+                      {t('dashboard.potentially_eligible_title', 'Potentially Eligible — Verification Required')} ({potentiallyEligibleSchemes.length})
                     </h3>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -242,11 +242,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                   <div className="flex items-center gap-2">
                     <HelpCircle className="w-5 h-5 text-blue-600" />
                     <h3 className="text-xl font-heading font-bold text-slate-900">
-                      Insufficient Profile Information ({insufficientInfoSchemes.length})
+                      {t('dashboard.insufficient_info_title', 'Insufficient Profile Information')} ({insufficientInfoSchemes.length})
                     </h3>
                   </div>
                   <p className="text-xs sm:text-sm text-slate-500">
-                    Update your profile with additional information (such as landholding or education stream) to evaluate these schemes.
+                    {t('dashboard.insufficient_info_desc', 'Update your profile with additional information (such as landholding or education stream) to evaluate these schemes.')}
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {insufficientInfoSchemes.map(ev => (
@@ -269,11 +269,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                   <div className="flex items-center gap-2">
                     <XCircle className="w-5 h-5 text-slate-400" />
                     <h3 className="text-lg font-heading font-bold text-slate-700">
-                      Not Eligible Based on Known Criteria ({notEligibleSchemes.length})
+                      {t('dashboard.not_eligible_title', 'Not Eligible Based on Known Criteria')} ({notEligibleSchemes.length})
                     </h3>
                   </div>
                   <p className="text-xs sm:text-sm text-slate-500">
-                    These schemes require attributes (such as state domicile or category) that do not match your current profile.
+                    {t('dashboard.not_eligible_desc', 'These schemes require attributes that do not match your current profile.')}
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {notEligibleSchemes.map(ev => (
@@ -301,10 +301,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             <div className="text-center py-16 bg-white border border-slate-200 shadow-sm rounded-2xl p-8 space-y-3">
               <Bookmark className="w-12 h-12 text-slate-300 mx-auto" />
               <h3 className="text-xl font-heading font-bold text-slate-900">
-                No Saved Schemes Yet
+                {t('dashboard.no_saved_title', 'No Saved Schemes Yet')}
               </h3>
               <p className="text-sm text-slate-600 max-w-md mx-auto">
-                Explore the scheme catalogue and click the bookmark icon on any scheme to save it for quick reference.
+                {t('dashboard.no_saved_desc', 'Explore the scheme catalogue and click the bookmark icon on any scheme to save it for quick reference.')}
               </p>
             </div>
           ) : (
@@ -328,37 +328,41 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         <div className="max-w-2xl bg-white border border-slate-200 shadow-sm rounded-2xl p-6 sm:p-8 space-y-6">
           <div className="space-y-2">
             <h3 className="text-2xl font-heading font-bold text-slate-900">
-              Your Data & Privacy Controls
+              {t('dashboard.privacy_title', 'Your Data & Privacy Controls')}
             </h3>
             <p className="text-sm text-slate-600 leading-relaxed">
-              We uphold the principle of data minimization and citizen data sovereignty. You have complete ownership over your citizen profile.
+              {t('dashboard.privacy_desc', 'We uphold the principle of data minimization and citizen data sovereignty. You have complete ownership over your citizen profile.')}
             </p>
           </div>
 
           <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-            <h4 className="font-semibold text-slate-900 text-sm">Data Stored on This Device:</h4>
+            <h4 className="font-semibold text-slate-900 text-sm">
+              {t('dashboard.data_stored_title', 'Data Stored on This Device:')}
+            </h4>
             <ul className="text-xs text-slate-600 space-y-1 list-disc list-inside">
-              <li>Citizen eligibility indicators (District, Age, Education, Occupation)</li>
-              <li>Saved schemes bookmarks ({savedSchemeIds.size})</li>
-              <li>Language preference ({profile?.preferred_language || 'en'})</li>
+              <li>{t('dashboard.data_stored_1', 'Citizen eligibility indicators (District, Age, Education, Occupation)')}</li>
+              <li>{t('dashboard.data_stored_2', 'Saved schemes bookmarks')} ({savedSchemeIds.size})</li>
+              <li>{t('dashboard.data_stored_3', 'Language preference')} ({profile?.preferred_language || 'en'})</li>
             </ul>
           </div>
 
           <div className="pt-4 border-t border-slate-200">
-            <h4 className="font-semibold text-red-600 text-sm mb-1">Permanent Data Erasure</h4>
+            <h4 className="font-semibold text-red-600 text-sm mb-1">
+              {t('dashboard.permanent_erasure', 'Permanent Data Erasure')}
+            </h4>
             <p className="text-xs text-slate-500 mb-4">
-              Delete your citizen profile, match history, and saved schemes permanently.
+              {t('dashboard.erasure_desc', 'Delete your citizen profile, match history, and saved schemes permanently.')}
             </p>
             <button
               onClick={() => {
-                if (window.confirm('Are you sure you want to delete your profile data permanently?')) {
+                if (window.confirm(t('dashboard.confirm_delete', 'Are you sure you want to delete your profile data permanently?'))) {
                   onDeleteProfile();
                 }
               }}
               className="px-4 py-2.5 bg-red-50 text-red-700 border border-red-200 rounded-xl text-xs font-semibold flex items-center gap-2 hover:bg-red-100 transition-colors cursor-pointer"
             >
               <Trash2 className="w-4 h-4" />
-              <span>Permanently Delete My Citizen Profile</span>
+              <span>{t('dashboard.btn_delete_profile', 'Permanently Delete My Citizen Profile')}</span>
             </button>
           </div>
         </div>

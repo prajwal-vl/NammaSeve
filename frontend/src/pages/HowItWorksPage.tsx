@@ -19,13 +19,13 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
       {/* Title */}
       <div className="text-center space-y-4 max-w-3xl mx-auto">
         <MaximalistBadge variant="saffron">
-          Civic Architecture
+          {t('how_it_works.badge', 'Civic Architecture')}
         </MaximalistBadge>
         <h1 className="text-3xl sm:text-4xl font-heading font-extrabold text-slate-900 tracking-tight">
-          How NammaSeve Matches Welfare Without Guesswork
+          {t('how_it_works.title', 'How NammaSeve Matches Welfare Without Guesswork')}
         </h1>
         <p className="text-base sm:text-lg text-slate-600">
-          A personal-profile-first matching engine designed around citizen transparency, deterministic logic, and genuine government data.
+          {t('how_it_works.subtitle', 'A personal-profile-first matching engine designed around citizen transparency, deterministic logic, and genuine government data.')}
         </p>
       </div>
 
@@ -36,10 +36,10 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
             <UserCheck className="w-5 h-5" />
           </div>
           <h3 className="text-lg font-heading font-bold text-slate-900">
-            1. Profile-First Matching
+            {t('how_it_works.pillar1_title', '1. Profile-First Matching')}
           </h3>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Instead of forcing citizens to browse hundreds of irrelevant schemes, NammaSeve evaluates your age, district, education, and occupation to identify applicable opportunities.
+            {t('how_it_works.pillar1_desc', 'Instead of forcing citizens to browse hundreds of irrelevant schemes, NammaSeve evaluates your age, district, education, and occupation to identify applicable opportunities.')}
           </p>
         </div>
 
@@ -48,10 +48,10 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
             <Cpu className="w-5 h-5" />
           </div>
           <h3 className="text-lg font-heading font-bold text-slate-900">
-            2. Deterministic Engine
+            {t('how_it_works.pillar2_title', '2. Deterministic Engine')}
           </h3>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Eligibility is never left to AI hallucination. We encode verifiable mathematical and logical rules from official gazettes into deterministic checks.
+            {t('how_it_works.pillar2_desc', 'Eligibility is never left to AI hallucination. We encode verifiable mathematical and logical rules from official gazettes into deterministic checks.')}
           </p>
         </div>
 
@@ -60,10 +60,10 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
             <ShieldCheck className="w-5 h-5" />
           </div>
           <h3 className="text-lg font-heading font-bold text-slate-900">
-            3. Zero Preseeded Data
+            {t('how_it_works.pillar3_title', '3. Zero Preseeded Data')}
           </h3>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            We never invent fake government records or demo schemes. Only genuine schemes verified from Seva Sindhu, myScheme, or official department portals are loaded.
+            {t('how_it_works.pillar3_desc', 'We never invent fake government records or demo schemes. Only genuine schemes verified from Seva Sindhu, myScheme, or official department portals are loaded.')}
           </p>
         </div>
       </div>
@@ -71,46 +71,46 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
       {/* Outcome Classification Explanation */}
       <div className="bg-white border border-slate-200 shadow-sm rounded-3xl p-6 sm:p-10 space-y-6">
         <h2 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900">
-          Understanding The Four Eligibility Outcomes
+          {t('how_it_works.outcomes_title', 'Understanding The Four Eligibility Outcomes')}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="p-5 bg-emerald-50/70 border border-emerald-200 rounded-xl space-y-1.5">
             <span className="font-semibold text-emerald-900 text-sm flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              Eligible based on available information
+              {t('how_it_works.outcome1_title', 'Eligible based on available information')}
             </span>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Every documented official criterion in the scheme rules was matched by your citizen profile.
+              {t('how_it_works.outcome1_desc', 'Every documented official criterion in the scheme rules was matched by your citizen profile.')}
             </p>
           </div>
 
           <div className="p-5 bg-amber-50/70 border border-amber-200 rounded-xl space-y-1.5">
             <span className="font-semibold text-amber-900 text-sm flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-amber-600" />
-              Potentially eligible — verification required
+              {t('how_it_works.outcome2_title', 'Potentially eligible — verification required')}
             </span>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Key general criteria match, but external conditions (like physical survey, land records, or medical certificates) require department verification.
+              {t('how_it_works.outcome2_desc', 'Key general criteria match, but external conditions require department verification.')}
             </p>
           </div>
 
           <div className="p-5 bg-blue-50/70 border border-blue-200 rounded-xl space-y-1.5">
             <span className="font-semibold text-blue-900 text-sm flex items-center gap-2">
               <UserCheck className="w-4 h-4 text-blue-600" />
-              Insufficient information
+              {t('how_it_works.outcome3_title', 'Insufficient information')}
             </span>
             <p className="text-xs text-slate-600 leading-relaxed">
-              The scheme requires specific criteria (e.g., student status or income ceiling) that you haven't answered yet in your profile.
+              {t('how_it_works.outcome3_desc', "The scheme requires specific criteria that you haven't answered yet in your profile.")}
             </p>
           </div>
 
           <div className="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
             <span className="font-semibold text-slate-900 text-sm flex items-center gap-2">
               <Lock className="w-4 h-4 text-slate-500" />
-              Not eligible based on documented criteria
+              {t('how_it_works.outcome4_title', 'Not eligible based on documented criteria')}
             </span>
             <p className="text-xs text-slate-600 leading-relaxed">
-              One or more official exclusionary conditions apply (e.g., residency outside the qualifying state or income above statutory limit).
+              {t('how_it_works.outcome4_desc', 'One or more official exclusionary conditions apply.')}
             </p>
           </div>
         </div>
@@ -122,7 +122,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
           onClick={onOpenProfile}
           className="px-8 py-3.5 bg-saffron text-white hover:bg-saffron-600 rounded-xl font-semibold text-base inline-flex items-center gap-2 shadow-sm transition-colors cursor-pointer"
         >
-          <span>Complete My Profile & Start Matching</span>
+          <span>{t('how_it_works.start_cta', 'Complete My Profile & Start Matching')}</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

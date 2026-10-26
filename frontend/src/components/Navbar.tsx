@@ -22,11 +22,26 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { t, i18n } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const currentLang = i18n.language === 'kn' ? 'kn' : 'en';
+  const [currentLang, setCurrentLang] = useState<'en' | 'kn'>(() => 
+    (i18n.resolvedLanguage || i18n.language || 'en').startsWith('kn') ? 'kn' : 'en'
+  );
+
+  React.useEffect(() => {
+    const handleLang = () => {
+      setCurrentLang((i18n.resolvedLanguage || i18n.language || 'en').startsWith('kn') ? 'kn' : 'en');
+    };
+    i18n.on('languageChanged', handleLang);
+    window.addEventListener('languagechange', handleLang);
+    return () => {
+      i18n.off('languageChanged', handleLang);
+      window.removeEventListener('languagechange', handleLang);
+    };
+  }, [i18n]);
 
   const toggleLanguage = () => {
     const nextLang = currentLang === 'en' ? 'kn' : 'en';
     switchLanguage(nextLang);
+    setCurrentLang(nextLang);
   };
 
   const navLinks = [

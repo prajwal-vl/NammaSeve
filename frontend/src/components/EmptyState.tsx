@@ -31,10 +31,10 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       {/* Badges */}
       <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
         <MaximalistBadge variant="green" icon={<ShieldCheck className="w-3.5 h-3.5" />}>
-          Verified Scheme Standard
+          {t('empty_state.verified_standard', 'Verified Scheme Standard')}
         </MaximalistBadge>
         <MaximalistBadge variant="saffron" icon={<Sparkles className="w-3.5 h-3.5" />}>
-          Zero Preseeded Records
+          {t('empty_state.zero_preseeded', 'Zero Preseeded Records')}
         </MaximalistBadge>
       </div>
 
@@ -58,7 +58,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           className="btn-primary px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer"
         >
           <UserCheck className="w-4 h-4" />
-          <span>{hasProfile ? 'Update My Citizen Profile' : t('empty_state.btn_complete_profile', 'Complete or Update My Profile')}</span>
+          <span>{hasProfile ? t('empty_state.update_profile', 'Update My Citizen Profile') : t('empty_state.btn_complete_profile', 'Complete or Update My Profile')}</span>
         </button>
 
         <button
@@ -88,7 +88,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
               onClick={onNavigateAdminImport}
               className="underline text-saffron-700 hover:text-saffron-900 font-bold ml-1 cursor-pointer"
             >
-              Import Schemes &rarr;
+              {t('empty_state.import_schemes', 'Import Schemes')} &rarr;
             </button>
           </div>
         </div>

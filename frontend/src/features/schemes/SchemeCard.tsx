@@ -23,7 +23,7 @@ export const SchemeCard: React.FC<SchemeCardProps> = ({
   onCheckEligibility,
 }) => {
   const { t, i18n } = useTranslation();
-  const isKn = i18n.language === 'kn';
+  const isKn = (i18n.resolvedLanguage || i18n.language || 'en').startsWith('kn');
 
   const displayName = isKn && scheme.kannada_name ? scheme.kannada_name : scheme.name;
   const secondaryName = isKn ? scheme.name : scheme.kannada_name;

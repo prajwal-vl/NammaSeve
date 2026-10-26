@@ -21,14 +21,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPrivacy }) => 
           <div className="md:col-span-1 space-y-4">
             <TreeLogo size="md" withText={true} kannadaText={true} />
             <p className="text-sm text-muted-text leading-relaxed">
-              Open civic platform matching Indian citizens with verified welfare benefits using deterministic criteria and official government records.
+              {t('footer.about_mission', 'Open civic platform matching Indian citizens with verified welfare benefits using deterministic criteria and official government records.')}
             </p>
             <div className="flex flex-wrap gap-2 pt-1">
               <MaximalistBadge variant="green" size="sm">
-                Zero Preseeded
+                {t('footer.zero_preseeded', 'Zero Preseeded')}
               </MaximalistBadge>
               <MaximalistBadge variant="saffron" size="sm">
-                Privacy-First
+                {t('footer.privacy_first', 'Privacy-First')}
               </MaximalistBadge>
             </div>
           </div>
@@ -36,7 +36,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPrivacy }) => 
           {/* Column 2: Navigation */}
           <div>
             <h4 className="font-heading font-bold text-sm uppercase tracking-wider text-dark-text mb-4">
-              Navigation
+              {t('footer.navigation', 'Navigation')}
             </h4>
             <ul className="space-y-2.5 text-sm font-medium">
               <li>
@@ -45,13 +45,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPrivacy }) => 
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('explore')} className="text-muted-text hover:text-saffron transition-colors cursor-pointer">
-                  {t('nav.explore', 'Explore Schemes')}
+                <button onClick={() => onNavigate('live-discovery')} className="text-muted-text hover:text-saffron transition-colors cursor-pointer">
+                  {t('nav.discover', 'Discover Schemes')}
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate('dashboard')} className="text-muted-text hover:text-saffron transition-colors cursor-pointer">
-                  {t('nav.dashboard', 'My Profile & Matches')}
+                  {t('nav.dashboard', 'My Profile')}
                 </button>
               </li>
               <li>
@@ -70,7 +70,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPrivacy }) => 
           {/* Column 3: Official Portals */}
           <div>
             <h4 className="font-heading font-bold text-sm uppercase tracking-wider text-dark-text mb-4">
-              Official Portals
+              {t('footer.official_portals', 'Official Portals')}
             </h4>
             <ul className="space-y-2.5 text-sm text-muted-text font-medium">
               <li>
@@ -123,10 +123,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPrivacy }) => 
           {/* Column 4: Civic Disclaimer & Privacy */}
           <div className="space-y-3">
             <h4 className="font-heading font-bold text-sm uppercase tracking-wider text-dark-text mb-4">
-              Civic Disclaimer
+              {t('footer.civic_disclaimer_title', 'Civic Disclaimer')}
             </h4>
             <p className="text-xs text-muted-text leading-relaxed">
-              NammaSeve does not collect application fees or disburse welfare funds. Responsible government departments make all binding eligibility and benefit determinations.
+              {t('footer.civic_disclaimer_desc', 'NammaSeve does not collect application fees or disburse welfare funds. Responsible government departments make all binding eligibility and benefit determinations.')}
             </p>
             <div className="pt-1">
               <button
@@ -134,7 +134,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPrivacy }) => 
                 className="text-xs font-semibold text-indian-green hover:underline flex items-center gap-1 cursor-pointer"
               >
                 <ShieldCheck className="w-4 h-4" />
-                Read Citizen Privacy Pledge
+                {t('footer.read_privacy_pledge', 'Read Citizen Privacy Pledge')}
               </button>
             </div>
           </div>
@@ -142,14 +142,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPrivacy }) => 
 
         {/* Bottom bar */}
         <div className="border-t border-gray-100 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-muted-text gap-4">
-          <p>© {new Date().getFullYear()} NammaSeve (ನಮ್ಮ ಸೇವೆ). Built for Indian Citizens.</p>
+          <p>© {new Date().getFullYear()} NammaSeve (ನಮ್ಮ ಸೇವೆ). {t('footer.copyright', 'Built for Indian Citizens.')}</p>
           <div className="flex items-center gap-4">
             <button onClick={onOpenPrivacy} className="hover:underline cursor-pointer">
-              Privacy & Consent
+              {t('footer.privacy_and_consent', 'Privacy & Consent')}
             </button>
             <span>•</span>
             <button onClick={() => onNavigate('about')} className="hover:underline cursor-pointer">
-              About Platform
+              {t('footer.about_platform', 'About Platform')}
             </button>
           </div>
         </div>

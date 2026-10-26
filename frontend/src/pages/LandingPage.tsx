@@ -48,12 +48,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   };
 
   const categories = [
-    { name: 'Agriculture & Farming', icon: <Tractor className="w-5 h-5 text-indian-green" />, desc: 'Kisan assistance, seed subsidies, crop insurance' },
-    { name: 'Youth & Education', icon: <GraduationCap className="w-5 h-5 text-saffron" />, desc: 'Post-matric scholarships, unemployment stipends, skill programs' },
-    { name: 'Women & Family Welfare', icon: <Users className="w-5 h-5 text-dark-text" />, desc: 'Gruha Lakshmi, maternity aid, nutrition assistance' },
-    { name: 'Healthcare & Health Insurance', icon: <HeartPulse className="w-5 h-5 text-red-600" />, desc: 'Ayushman Bharat PM-JAY, cashless hospitalization' },
-    { name: 'Housing & Urban Welfare', icon: <Home className="w-5 h-5 text-amber-600" />, desc: 'PMAY pucca house subsidies, housing loans' },
-    { name: 'Energy & Utilities', icon: <SunMedium className="w-5 h-5 text-yellow-600" />, desc: 'Gruha Jyothi free power, solar rooftop subsidies' },
+    { name: t('landing.cat_agri', 'Agriculture & Farming'), icon: <Tractor className="w-5 h-5 text-indian-green" />, desc: t('landing.cat_agri_desc', 'Kisan assistance, seed subsidies, crop insurance') },
+    { name: t('landing.cat_youth', 'Youth & Education'), icon: <GraduationCap className="w-5 h-5 text-saffron" />, desc: t('landing.cat_youth_desc', 'Post-matric scholarships, unemployment stipends, skill programs') },
+    { name: t('landing.cat_women', 'Women & Family Welfare'), icon: <Users className="w-5 h-5 text-dark-text" />, desc: t('landing.cat_women_desc', 'Gruha Lakshmi, maternity aid, nutrition assistance') },
+    { name: t('landing.cat_health', 'Healthcare & Health Insurance'), icon: <HeartPulse className="w-5 h-5 text-red-600" />, desc: t('landing.cat_health_desc', 'Ayushman Bharat PM-JAY, cashless hospitalization') },
+    { name: t('landing.cat_housing', 'Housing & Urban Welfare'), icon: <Home className="w-5 h-5 text-amber-600" />, desc: t('landing.cat_housing_desc', 'PMAY pucca house subsidies, housing loans') },
+    { name: t('landing.cat_energy', 'Energy & Utilities'), icon: <SunMedium className="w-5 h-5 text-yellow-600" />, desc: t('landing.cat_energy_desc', 'Gruha Jyothi free power, solar rooftop subsidies') },
   ];
 
   return (
@@ -67,25 +67,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <TreeLogo size="xl" withText={false} />
             <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
               <MaximalistBadge variant="saffron" icon={<Sparkles className="w-3.5 h-3.5" />}>
-                Live Online Search
+                {t('hero.badge_live_search', 'Live Online Search')}
               </MaximalistBadge>
               <MaximalistBadge variant="green" icon={<ShieldCheck className="w-3.5 h-3.5" />}>
-                Official Government Portals
+                {t('hero.badge_official_sources', 'Official Government Portals')}
               </MaximalistBadge>
               <MaximalistBadge variant="dark" icon={<UserCheck className="w-3.5 h-3.5" />}>
-                Zero Aadhaar Required
+                {t('hero.badge_zero_aadhaar', 'Zero Aadhaar Required')}
               </MaximalistBadge>
             </div>
           </div>
 
           {/* Hero Headline */}
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-heading font-extrabold text-slate-900 tracking-tight leading-[1.12]">
-            Find Government Schemes You May Qualify For
+            {t('hero.heading', 'Find Government Schemes You May Qualify For')}
           </h1>
 
           {/* Subtitle */}
           <p className="text-base sm:text-lg text-slate-600 font-normal max-w-2xl mx-auto leading-relaxed">
-            A privacy-first civic platform that searches the live internet for relevant Karnataka and Central government welfare schemes based on your personal criteria, with clear bilingual explanations and direct official links.
+            {t('hero.subheading', 'A privacy-first civic platform that searches the live internet for relevant Karnataka and Central government welfare schemes based on your personal criteria, with clear bilingual explanations and direct official links.')}
           </p>
 
           {/* Interactive Search Bar */}
@@ -105,7 +105,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 type="submit"
                 className="btn-primary px-5 py-2 rounded-lg text-sm font-semibold flex items-center gap-1.5 cursor-pointer shrink-0"
               >
-                <span>Find My Schemes</span>
+                <span>{t('hero.btn_find_schemes', 'Find My Schemes')}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -118,7 +118,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               className="px-6 py-2.5 bg-saffron text-white hover:bg-saffron-600 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer shadow-xs transition-colors"
             >
               <Sparkles className="w-4 h-4" />
-              <span>Find My Schemes</span>
+              <span>{t('hero.btn_find_schemes', 'Find My Schemes')}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
@@ -127,20 +127,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               className="px-5 py-2.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-colors"
             >
               <UserCheck className="w-4 h-4 text-emerald-700" />
-              <span>{profile ? 'Edit My Citizen Profile' : 'Set Up Profile'}</span>
+              <span>{profile ? t('hero.btn_edit_profile', 'Edit My Citizen Profile') : t('hero.btn_setup_profile', 'Set Up Profile')}</span>
             </button>
 
             <button
               onClick={() => onNavigate('how-it-works')}
               className="px-5 py-2.5 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-colors"
             >
-              <span>How It Works</span>
+              <span>{t('hero.btn_how_it_works', 'How It Works')}</span>
             </button>
           </div>
 
           {/* Disclaimer & Explanation */}
           <div className="pt-2 text-xs text-slate-500 max-w-xl mx-auto leading-relaxed">
-            NammaSeve is an independent information platform. Discovery results are informational and final eligibility is determined solely by the relevant government department or authority.
+            {t('hero.disclaimer', 'NammaSeve is an independent public-service discovery platform. Results are informational only; final eligibility is determined solely by the relevant government department or authority.')}
           </div>
         </div>
       </section>
@@ -160,17 +160,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <MaximalistBadge variant="green" size="sm">
-                  Verified Catalog
+                  {t('landing.verified_catalog', 'Verified Catalog')}
                 </MaximalistBadge>
                 <h2 className="text-2xl sm:text-3xl font-heading font-bold text-dark-text mt-1">
-                  Featured Government Schemes
+                  {t('landing.featured_schemes', 'Featured Government Schemes')}
                 </h2>
               </div>
               <button
                 onClick={() => onNavigate('explore')}
                 className="btn-secondary px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 self-start cursor-pointer"
               >
-                <span>View all {schemes.length} schemes</span>
+                <span>{t('landing.view_all_schemes', 'View all schemes')} ({schemes.length})</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -194,7 +194,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       onClick={() => onNavigate('explore')}
                       className="btn-primary w-full py-2 rounded-lg text-xs font-semibold text-center"
                     >
-                      View Details & Check Eligibility
+                      {t('landing.view_details_check', 'View Details & Check Eligibility')}
                     </button>
                   </div>
                 </div>
@@ -208,7 +208,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       <section className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="text-center space-y-2 mb-10">
           <MaximalistBadge variant="saffron">
-            How It Works
+            {t('nav.how_it_works', 'How It Works')}
           </MaximalistBadge>
           <h2 className="text-2xl sm:text-4xl font-heading font-bold text-dark-text">
             {t('steps.title', 'Three Steps to Unlock Your Entitlements')}
@@ -261,13 +261,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       <section className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="text-center space-y-2 mb-8">
           <MaximalistBadge variant="green">
-            Sectors Covered
+            {t('landing.sectors_badge', 'Sectors Covered')}
           </MaximalistBadge>
           <h2 className="text-2xl sm:text-3xl font-heading font-bold text-dark-text">
-            Key Government Welfare Sectors
+            {t('landing.sectors_title', 'Key Government Welfare Sectors')}
           </h2>
           <p className="text-xs sm:text-sm text-muted-text max-w-md mx-auto">
-            From direct benefit transfers (DBT) to educational scholarships and renewable subsidies.
+            {t('landing.sectors_desc', 'From direct benefit transfers (DBT) to educational scholarships and renewable subsidies.')}
           </p>
         </div>
 
@@ -297,31 +297,39 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="bg-white border border-gray-200 rounded-2xl p-6 sm:p-10 shadow-xs relative">
           <div className="max-w-2xl space-y-5">
             <MaximalistBadge variant="green" icon={<ShieldCheck className="w-3.5 h-3.5" />}>
-              Constitutional Privacy
+              {t('landing.pledge_badge', 'Constitutional Privacy')}
             </MaximalistBadge>
             <h2 className="text-2xl sm:text-4xl font-heading font-bold text-dark-text leading-tight">
-              We Never Ask for Aadhaar, Bank Details, or Passwords.
+              {t('landing.pledge_title', 'We Never Ask for Aadhaar, Bank Details, or Passwords.')}
             </h2>
             <p className="text-sm sm:text-base text-muted-text leading-relaxed">
-              Discovering public welfare shouldn't mean compromising your digital safety. NammaSeve uses general eligibility parameters to calculate matching schemes, and directs you to apply safely on official government portals.
+              {t('landing.pledge_desc', "Discovering public welfare shouldn't mean compromising your digital safety. NammaSeve uses general eligibility parameters to calculate matching schemes, and directs you to apply safely on official government portals.")}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-indian-green shrink-0" />
-                <span className="text-xs sm:text-sm font-medium text-dark-text">Zero Fabricated Recommendations</span>
+                <span className="text-xs sm:text-sm font-medium text-dark-text">
+                  {t('landing.pledge_point_1', 'Zero Fabricated Recommendations')}
+                </span>
               </div>
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-indian-green shrink-0" />
-                <span className="text-xs sm:text-sm font-medium text-dark-text">Deterministic Rule Checks</span>
+                <span className="text-xs sm:text-sm font-medium text-dark-text">
+                  {t('landing.pledge_point_2', 'Deterministic Rule Checks')}
+                </span>
               </div>
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-indian-green shrink-0" />
-                <span className="text-xs sm:text-sm font-medium text-dark-text">Instant Data Erasure Anytime</span>
+                <span className="text-xs sm:text-sm font-medium text-dark-text">
+                  {t('landing.pledge_point_3', 'Instant Data Erasure Anytime')}
+                </span>
               </div>
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-indian-green shrink-0" />
-                <span className="text-xs sm:text-sm font-medium text-dark-text">Bilingual in Kannada & English</span>
+                <span className="text-xs sm:text-sm font-medium text-dark-text">
+                  {t('landing.pledge_point_4', 'Bilingual in Kannada & English')}
+                </span>
               </div>
             </div>
 
@@ -330,7 +338,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 onClick={onOpenPrivacy}
                 className="btn-secondary px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer"
               >
-                Read Citizen Privacy Pledge
+                {t('landing.pledge_btn', 'Read Citizen Privacy Pledge')}
               </button>
             </div>
           </div>
@@ -340,17 +348,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       {/* FINAL CALL TO ACTION */}
       <section className="max-w-3xl mx-auto px-4 sm:px-6 text-center space-y-4 pb-6">
         <h2 className="text-2xl sm:text-3xl font-heading font-bold text-dark-text">
-          Ready to Find the Welfare Schemes You Deserve?
+          {t('landing.cta_ready_title', 'Ready to Find the Welfare Schemes You Deserve?')}
         </h2>
         <p className="text-sm text-muted-text max-w-lg mx-auto">
-          Take 2 minutes to create your citizen profile and start matching opportunities.
+          {t('landing.cta_ready_desc', 'Take 2 minutes to create your citizen profile and start matching opportunities.')}
         </p>
         <button
           onClick={onOpenProfile}
           className="btn-primary px-7 py-3 rounded-xl text-base font-bold inline-flex items-center gap-2 cursor-pointer shadow-sm"
         >
           <UserCheck className="w-5 h-5" />
-          <span>Get Started with My Profile</span>
+          <span>{t('landing.cta_get_started', 'Get Started with My Profile')}</span>
         </button>
       </section>
     </div>

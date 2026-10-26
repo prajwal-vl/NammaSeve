@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
   X, 
@@ -38,10 +38,17 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
   onToggleSave,
 }) => {
   const { t, i18n } = useTranslation();
+  const activeSystemLang: 'en' | 'kn' = (i18n.resolvedLanguage || i18n.language || 'en').startsWith('kn') ? 'kn' : 'en';
+
   const [explanation, setExplanation] = useState<StructuredAiExplanation | null>(null);
   const [isLoadingAi, setIsLoadingAi] = useState(false);
-  const [aiLanguage, setAiLanguage] = useState<'en' | 'kn'>(i18n.language === 'kn' ? 'kn' : 'en');
+  const [aiLanguage, setAiLanguage] = useState<'en' | 'kn'>(activeSystemLang);
   const [userQuestion, setUserQuestion] = useState('');
+
+  // Sync aiLanguage whenever system language changes
+  useEffect(() => {
+    setAiLanguage(activeSystemLang);
+  }, [activeSystemLang]);
 
   if (!isOpen || !scheme) return null;
 
@@ -79,13 +86,15 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
                 variant={scheme.government_level === 'central' ? 'saffron' : 'green'} 
                 size="sm"
               >
-                {scheme.government_level === 'central' ? 'Central Govt Scheme' : 'State Govt Scheme'}
+                {scheme.government_level === 'central'
+                  ? t('modal.central_govt_scheme', 'Central Govt Scheme')
+                  : t('modal.state_govt_scheme', 'State Govt Scheme')}
               </MaximalistBadge>
 
               {scheme.is_official_domain && (
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                  Official Domain Verified
+                  {t('modal.official_domain_verified', 'Official Domain Verified')}
                 </span>
               )}
             </div>
@@ -132,7 +141,7 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
           {/* Overview */}
           <div className="space-y-1.5">
             <h3 className="text-xs uppercase tracking-wider font-bold text-slate-500">
-              Summary & Overview
+              {t('modal.summary_overview', 'Summary & Overview')}
             </h3>
             <p className="text-sm text-slate-700 leading-relaxed">
               {scheme.summary}
@@ -143,7 +152,7 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
           {scheme.benefits && scheme.benefits.length > 0 && (
             <div className="space-y-2">
               <h3 className="text-xs uppercase tracking-wider font-bold text-slate-500">
-                Documented Benefits & Subsidies
+                {t('modal.documented_benefits_subsidies', 'Documented Benefits & Subsidies')}
               </h3>
               <ul className="space-y-1.5">
                 {scheme.benefits.map((b, i) => (
@@ -160,7 +169,7 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
           {scheme.eligibility_requirements && scheme.eligibility_requirements.length > 0 && (
             <div className="space-y-2">
               <h3 className="text-xs uppercase tracking-wider font-bold text-slate-500">
-                Documented Eligibility Guidelines
+                {t('modal.documented_eligibility_guidelines', 'Documented Eligibility Guidelines')}
               </h3>
               <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                 <ul className="space-y-1.5">
@@ -181,7 +190,7 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
               <div className="p-3.5 bg-emerald-50/60 border border-emerald-200 rounded-xl space-y-1">
                 <span className="text-xs font-semibold text-emerald-900 flex items-center gap-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                  Matched Criteria ({scheme.matched_criteria.length})
+                  {t('modal.matched_criteria', 'Matched Criteria')} ({scheme.matched_criteria.length})
                 </span>
                 <ul className="text-xs text-slate-600 space-y-0.5">
                   {scheme.matched_criteria.map((m, i) => (
@@ -195,7 +204,7 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
               <div className="p-3.5 bg-blue-50/60 border border-blue-200 rounded-xl space-y-1">
                 <span className="text-xs font-semibold text-blue-900 flex items-center gap-1.5">
                   <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
-                  Additional Information Needed
+                  {t('modal.additional_info_needed', 'Additional Information Needed')}
                 </span>
                 <ul className="text-xs text-slate-600 space-y-0.5">
                   {scheme.missing_criteria.map((m, i) => (
@@ -211,7 +220,7 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
             {scheme.application_steps && scheme.application_steps.length > 0 && (
               <div className="space-y-1.5">
                 <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                  How to Apply
+                  {t('modal.how_to_apply', 'How to Apply')}
                 </h4>
                 <ol className="text-xs text-slate-600 space-y-1 list-decimal list-inside">
                   {scheme.application_steps.map((st, i) => (
@@ -224,7 +233,7 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
             {scheme.required_documents && scheme.required_documents.length > 0 && (
               <div className="space-y-1.5">
                 <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                  Required Documents
+                  {t('modal.required_documents', 'Required Documents')}
                 </h4>
                 <ul className="text-xs text-slate-600 space-y-1 list-disc list-inside">
                   {scheme.required_documents.map((d, i) => (
@@ -244,10 +253,10 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-slate-900">
-                    AI Scheme Explanation (Groq)
+                    {t('modal.ai_explanation_title', 'AI Scheme Explanation (Groq)')}
                   </h4>
                   <p className="text-xs text-slate-500">
-                    Get simple, factual answers in English or Kannada
+                    {t('modal.ai_explanation_subtitle', 'Get simple, factual answers in English or Kannada')}
                   </p>
                 </div>
               </div>
@@ -284,7 +293,7 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
                 type="text"
                 value={userQuestion}
                 onChange={(e) => setUserQuestion(e.target.value)}
-                placeholder="Ask specific question (e.g. 'Can I apply if I am in college?')"
+                placeholder={t('modal.ask_custom_question', "Ask specific question (e.g. 'Can I apply if I am in college?')")}
                 className="minimal-input flex-1 px-3 py-2 text-xs bg-white"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') handleFetchAiExplanation(aiLanguage);
@@ -296,7 +305,7 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
                 className="px-3 py-2 bg-saffron text-white hover:bg-saffron-600 rounded-xl text-xs font-semibold shadow-xs transition-colors cursor-pointer flex items-center gap-1.5"
               >
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>{isLoadingAi ? 'Explaining...' : 'Ask AI'}</span>
+                <span>{isLoadingAi ? t('modal.explaining', 'Explaining...') : t('modal.ask_ai_btn', 'Ask AI')}</span>
               </button>
             </div>
 
@@ -304,17 +313,17 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
             {explanation && (
               <div className="mt-3 p-4 bg-white border border-saffron-200 rounded-xl space-y-3 text-xs leading-relaxed animate-in fade-in duration-150">
                 <div>
-                  <span className="font-bold text-slate-900 block mb-1">Overview:</span>
+                  <span className="font-bold text-slate-900 block mb-1">{t('modal.overview', 'Overview:')}</span>
                   <p className="text-slate-700">{explanation.summary}</p>
                 </div>
 
                 <div>
-                  <span className="font-bold text-slate-900 block mb-1">Who Qualifies:</span>
+                  <span className="font-bold text-slate-900 block mb-1">{t('modal.who_qualifies', 'Who Qualifies:')}</span>
                   <p className="text-slate-700">{explanation.eligibility_clarification}</p>
                 </div>
 
                 <div>
-                  <span className="font-bold text-slate-900 block mb-1">How to Apply:</span>
+                  <span className="font-bold text-slate-900 block mb-1">{t('modal.how_to_apply', 'How to Apply:')}</span>
                   <p className="text-slate-700">{explanation.application_guidance}</p>
                 </div>
 
@@ -329,14 +338,15 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
 
           {/* Civic Integrity Notice */}
           <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-[11px] text-slate-500 leading-relaxed">
-            <strong>Civic Notice:</strong> NammaSeve is an independent discovery platform. We do not approve, process, or certify government benefits. All applications must be submitted directly to official government departments or authorized service centers.
+            <strong>{t('modal.civic_notice_title', 'Civic Notice:')}</strong>{' '}
+            {t('modal.civic_notice_desc', 'NammaSeve is an independent discovery platform. We do not approve, process, or certify government benefits. All applications must be submitted directly to official government departments or authorized service centers.')}
           </div>
         </div>
 
         {/* Modal Footer with Direct Source Links */}
         <div className="p-4 sm:p-5 border-t border-slate-100 bg-slate-50/80 flex flex-wrap items-center justify-between gap-3">
           <div className="text-xs text-slate-500">
-            Discovered from verified web evidence • {new Date(scheme.last_checked_at).toLocaleDateString()}
+            {t('modal.discovered_from_evidence', 'Discovered from verified web evidence')} • {new Date(scheme.last_checked_at).toLocaleDateString()}
           </div>
 
           <div className="flex items-center gap-2">
@@ -347,7 +357,7 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
                 rel="noopener noreferrer"
                 className="px-4 py-2 bg-indian-green text-white hover:bg-indian-green-700 rounded-xl text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-colors"
               >
-                <span>Apply on Official Portal</span>
+                <span>{t('modal.apply_on_portal', 'Apply on Official Portal')}</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             )}
@@ -358,7 +368,7 @@ export const DiscoveredSchemeDetailModal: React.FC<DiscoveredSchemeDetailModalPr
               rel="noopener noreferrer"
               className="px-4 py-2 bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 rounded-xl text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-colors"
             >
-              <span>View Official Source</span>
+              <span>{t('modal.view_official_source', 'View Official Source')}</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>

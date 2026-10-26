@@ -65,7 +65,7 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
       const response = await callDiscoverSchemes({
         profile: profile || {},
         keyword_query: keywordQuery.trim(),
-        language: i18n.language === 'kn' ? 'kn' : 'en',
+        language: (i18n.resolvedLanguage || i18n.language || 'en').startsWith('kn') ? 'kn' : 'en',
         user_id: user?.id,
         force_fresh: forceFresh,
       });
@@ -113,17 +113,17 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
         <div>
           <div className="flex items-center gap-2 mb-1.5">
             <MaximalistBadge variant="saffron" size="sm">
-              Live Web Discovery
+              {t('discovery.badge', 'Live Web Discovery')}
             </MaximalistBadge>
             <span className="text-xs font-semibold text-slate-500">
-              Powered by Groq AI & Genuine Web Sources
+              {t('discovery.powered_by', 'Powered by Groq AI & Genuine Web Sources')}
             </span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-heading font-extrabold text-slate-900 tracking-tight">
-            Discover Government Schemes for You
+            {t('discovery.title', 'Discover Government Schemes for You')}
           </h1>
           <p className="text-sm sm:text-base text-slate-600 mt-1 max-w-2xl">
-            Real-time search across central and state government portals using your verified citizen criteria. No static preseeded records.
+            {t('discovery.subtitle', 'Real-time search across central and state government portals using your verified citizen criteria. No static preseeded records.')}
           </p>
         </div>
 
@@ -132,14 +132,14 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
           className="px-4 py-2 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer self-start sm:self-auto"
         >
           <Edit3 className="w-4 h-4 text-slate-500" />
-          <span>{profile ? 'Edit Profile Criteria' : 'Set Up Profile'}</span>
+          <span>{profile ? t('discovery.edit_profile', 'Edit Profile Criteria') : t('discovery.setup_profile', 'Set Up Profile')}</span>
         </button>
       </div>
 
       {/* Profile Criteria Pill Summary */}
       <div className="p-4 bg-slate-50 border border-slate-200/90 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="font-semibold text-slate-700">Search Context:</span>
+          <span className="font-semibold text-slate-700">{t('discovery.search_context', 'Search Context:')}</span>
           <span className="px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-slate-800 font-medium">
             State: {profile?.state || 'Karnataka (Default)'}
           </span>
@@ -184,7 +184,7 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
               type="text"
               value={keywordQuery}
               onChange={(e) => setKeywordQuery(e.target.value)}
-              placeholder="Search by scheme name or keywords (e.g. 'Scholarship', 'Kisan subsidy', 'Housing aid')..."
+              placeholder={t('discovery.search_placeholder', "Search by scheme name or keywords (e.g. 'Scholarship', 'Kisan subsidy', 'Housing aid')...")}
               className="minimal-input w-full pl-10 pr-4 py-2.5 text-sm font-medium text-slate-900 bg-slate-50/50"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handlePerformDiscovery(true);
@@ -200,12 +200,12 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
             {isSearching ? (
               <>
                 <RefreshCw className="w-4 h-4 animate-spin" />
-                <span>Searching Government Sources...</span>
+                <span>{t('discovery.searching_button', 'Searching Government Sources...')}</span>
               </>
             ) : (
               <>
                 <Sparkles className="w-4 h-4" />
-                <span>Find My Schemes</span>
+                <span>{t('discovery.find_button', 'Find My Schemes')}</span>
               </>
             )}
           </button>
@@ -225,10 +225,10 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
           </div>
           <div className="space-y-1">
             <h3 className="text-lg font-heading font-bold text-slate-900">
-              Searching Official Government Portals...
+              {t('discovery.searching_title', 'Searching Official Government Portals...')}
             </h3>
             <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
-              Querying live web evidence and assessing eligibility against your citizen profile. This takes a few seconds.
+              {t('discovery.searching_desc', 'Querying live web evidence and assessing eligibility against your citizen profile. This takes a few seconds.')}
             </p>
           </div>
           <div className="w-48 h-1.5 bg-slate-100 rounded-full mx-auto overflow-hidden">
@@ -286,7 +286,7 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
                       : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                   }`}
                 >
-                  All Schemes ({searchResults.length})
+                  {t('discovery.tab_all', 'All Schemes')} ({searchResults.length})
                 </button>
 
                 <button
@@ -297,7 +297,7 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
                       : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                   }`}
                 >
-                  Potentially Eligible ({eligibleCount})
+                  {t('discovery.tab_potentially_eligible', 'Potentially Eligible')} ({eligibleCount})
                 </button>
 
                 <button
@@ -308,7 +308,7 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
                       : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                   }`}
                 >
-                  Needs More Info ({infoNeededCount})
+                  {t('discovery.tab_needs_info', 'Needs More Info')} ({infoNeededCount})
                 </button>
 
                 {notEligibleCount > 0 && (
@@ -320,13 +320,13 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
                         : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                     }`}
                   >
-                    Unmet Criteria ({notEligibleCount})
+                    {t('discovery.tab_unmet', 'Unmet Criteria')} ({notEligibleCount})
                   </button>
                 )}
               </div>
 
               <div className="text-xs text-slate-500 font-medium">
-                {searchResponse?.cached ? '⚡ 24h Cached Evidence' : '🌐 Fresh Web Evidence'}
+                {searchResponse?.cached ? t('discovery.cached_evidence', '⚡ 24h Cached Evidence') : t('discovery.fresh_evidence', '🌐 Fresh Web Evidence')}
               </div>
             </div>
           )}
@@ -338,23 +338,23 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
                 <Search className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-heading font-bold text-slate-900">
-                No Schemes Discovered For This Query
+                {t('discovery.no_results_title', 'No Schemes Discovered For This Query')}
               </h3>
               <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
-                No active government schemes could be verified matching your current search terms. Try broadening your keywords (e.g. "scholarships", "housing", "farmer") or updating your citizen profile.
+                {t('discovery.no_results_desc', 'No active government schemes could be verified matching your current search terms. Try broadening your keywords (e.g. "scholarships", "housing", "farmer") or updating your citizen profile.')}
               </p>
               <div className="flex items-center justify-center gap-3 pt-2">
                 <button
                   onClick={() => { setKeywordQuery(''); handlePerformDiscovery(true); }}
                   className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold cursor-pointer shadow-xs"
                 >
-                  Reset Query
+                  {t('discovery.btn_reset', 'Reset Query')}
                 </button>
                 <button
                   onClick={onOpenProfile}
                   className="px-4 py-2 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold cursor-pointer shadow-xs"
                 >
-                  Edit Profile
+                  {t('discovery.edit_profile', 'Edit Profile')}
                 </button>
               </div>
             </div>
@@ -379,7 +379,7 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
           {/* Civic Disclaimer Footer */}
           {searchResults.length > 0 && (
             <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-500 leading-relaxed text-center max-w-3xl mx-auto">
-              These are potential matches identified through live online research. Always review the official department website or notification to confirm statutory eligibility, application deadlines, and quota guidelines.
+              {t('discovery.footer_disclaimer', 'These are potential matches identified through live online research. Always review the official department website or notification to confirm statutory eligibility, application deadlines, and quota guidelines.')}
             </div>
           )}
         </div>
@@ -394,10 +394,10 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
 
           <div className="space-y-2">
             <h2 className="text-2xl sm:text-3xl font-heading font-extrabold text-slate-900">
-              Start Your Personalized Welfare Discovery
+              {t('discovery.start_title', 'Start Your Personalized Welfare Discovery')}
             </h2>
             <p className="text-sm text-slate-600 max-w-lg mx-auto leading-relaxed">
-              Click below to initiate live online discovery across Karnataka State and Central Government welfare schemes tailored to your profile.
+              {t('discovery.start_desc', 'Click below to initiate live online discovery across Karnataka State and Central Government welfare schemes tailored to your profile.')}
             </p>
           </div>
 
@@ -407,7 +407,7 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
               className="px-6 py-3 bg-saffron text-white hover:bg-saffron-600 rounded-xl font-semibold text-sm shadow-xs transition-all flex items-center gap-2 cursor-pointer w-full sm:w-auto justify-center"
             >
               <Sparkles className="w-4 h-4" />
-              <span>Search Government Sources Now</span>
+              <span>{t('discovery.start_cta', 'Search Government Sources Now')}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
@@ -415,7 +415,7 @@ export const LiveDiscoveryPage: React.FC<LiveDiscoveryPageProps> = ({
               onClick={onNavigateHowItWorks}
               className="px-5 py-3 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 rounded-xl font-semibold text-sm shadow-xs transition-colors cursor-pointer w-full sm:w-auto"
             >
-              How It Works
+              {t('nav.how_it_works', 'How It Works')}
             </button>
           </div>
         </div>

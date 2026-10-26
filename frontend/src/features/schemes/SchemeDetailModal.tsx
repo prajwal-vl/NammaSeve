@@ -36,7 +36,7 @@ export const SchemeDetailModal: React.FC<SchemeDetailModalProps> = ({
   onClose,
 }) => {
   const { t, i18n } = useTranslation();
-  const isKn = i18n.language === 'kn';
+  const isKn = (i18n.resolvedLanguage || i18n.language || 'en').startsWith('kn');
 
   const [userQuestion, setUserQuestion] = useState('');
   const [aiLoading, setAiLoading] = useState(false);

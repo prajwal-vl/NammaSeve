@@ -3,7 +3,16 @@ import { initReactI18next } from 'react-i18next';
 import en from './locales/en.json';
 import kn from './locales/kn.json';
 
-const savedLanguage = (typeof window !== 'undefined' && localStorage.getItem('nammaseve_lang')) || 'en';
+const getInitialLanguage = (): string => {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('nammaseve_lang');
+    if (saved === 'kn' || saved === 'en') return saved;
+    if (typeof navigator !== 'undefined' && navigator.language?.startsWith('kn')) {
+      return 'kn';
+    }
+  }
+  return 'en';
+};
 
 i18n
   .use(initReactI18next)
@@ -12,10 +21,13 @@ i18n
       en: { translation: en },
       kn: { translation: kn },
     },
-    lng: savedLanguage,
+    lng: getInitialLanguage(),
     fallbackLng: 'en',
+    load: 'languageOnly',
+    supportedLngs: ['en', 'kn'],
+    nonExplicitSupportedLngs: true,
     interpolation: {
-      escapeValue: false, // React already escapes XSS
+      escapeValue: false,
     },
   });
 
@@ -23,6 +35,8 @@ export function switchLanguage(lang: 'en' | 'kn') {
   i18n.changeLanguage(lang);
   if (typeof window !== 'undefined') {
     localStorage.setItem('nammaseve_lang', lang);
+    document.documentElement.lang = lang;
+    window.dispatchEvent(new CustomEvent('languagechange', { detail: { lang } }));
   }
 }
 
