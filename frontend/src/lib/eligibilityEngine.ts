@@ -22,7 +22,7 @@ export function evaluateSchemeEligibility(
       scheme_id: scheme.id,
       scheme,
       status: 'potentially_eligible',
-      matched_reasons: ['Universal citizen scheme with no specific restrictive exclusions recorded.'],
+      matched_reasons: ['Universal citizen benefit with no specific restrictive exclusions recorded.'],
       unmatched_reasons: [],
       missing_fields: [],
       source_references: scheme.sources?.map(s => `${s.publisher}: ${s.source_url}`) || [],
@@ -91,9 +91,11 @@ export function evaluateSchemeEligibility(
     }
   });
 
-  let status: EligibilityStatus = 'eligible';
+  // Exactly specified 4 deterministic outcome statuses
+  let status: EligibilityStatus = 'eligible_based_on_available_information';
+
   if (hardExclusion) {
-    status = 'not_eligible';
+    status = 'not_eligible_based_on_known_criteria';
   } else if (missing_fields.length > 0) {
     if (matched_reasons.length > 0) {
       status = 'potentially_eligible';
@@ -130,10 +132,12 @@ function formatMatchReason(attribute: string, operator: string, value: string): 
     ration_card_type: 'Ration Card Category',
     annual_income_max: 'Annual Income Ceiling',
     community_category: 'Community Category',
+    disability_status: 'Disability Benchmark Status',
+    is_tax_payer: 'Tax Payer Exclusion Rule',
   };
 
   const name = friendlyNames[attribute] || attribute;
-  return `Criteria matched for ${name} (${operator} ${value})`;
+  return `Documented criterion matched for ${name} (${operator} ${value})`;
 }
 
 function formatUnmatchedReason(attribute: string, actual: string, required: string): string {

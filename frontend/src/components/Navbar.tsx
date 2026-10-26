@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Languages, Menu, X, Shield, Sparkles, User, LogOut, FileText } from 'lucide-react';
+import { Languages, Menu, X, User, LogOut } from 'lucide-react';
 import { switchLanguage } from '../i18n';
-import { MaximalistBadge } from './MaximalistBadge';
+import { TreeLogo } from './TreeLogo';
 
 interface NavbarProps {
   currentPage: string;
@@ -31,50 +31,38 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navLinks = [
     { id: 'home', label: t('nav.home', 'Home') },
-    { id: 'explore', label: t('nav.explore', 'Explore Schemes') },
-    { id: 'dashboard', label: t('nav.dashboard', 'My Profile & Matches') },
+    { id: 'live-discovery', label: t('nav.discover', 'Discover Schemes') },
     { id: 'how-it-works', label: t('nav.how_it_works', 'How It Works') },
-    { id: 'admin-import', label: t('nav.admin_import', 'Admin Ingestion') },
+    { id: 'dashboard', label: t('nav.dashboard', 'My Profile') },
+    { id: 'saved', label: t('nav.saved', 'Saved Schemes') },
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-4 border-dark-text shadow-neo-sm">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
-          {/* Logo / Wordmark */}
+          {/* Logo with Tree Emblem & Tagline */}
           <div 
             onClick={() => onNavigate('home')}
-            className="flex items-center gap-3 cursor-pointer group"
+            className="cursor-pointer group select-none flex flex-col justify-center"
           >
-            <div className="w-11 h-11 rounded-xl bg-saffron border-2.5 border-dark-text shadow-[3px_3px_0px_#20241F] flex items-center justify-center text-white font-black text-xl group-hover:bg-saffron-600 transition-all">
-              NS
-            </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-black font-heading tracking-tight text-dark-text">
-                  Namma<span className="text-saffron">Seve</span>
-                </span>
-                <span className="text-sm font-bold text-indian-green font-kannada bg-indian-green-100 px-2 py-0.5 rounded-md border border-indian-green">
-                  ನಮ್ಮ ಸೇವೆ
-                </span>
-              </div>
-              <span className="text-xs text-muted-text font-medium hidden sm:block">
-                AI-Powered Citizen Scheme Discovery
-              </span>
-            </div>
+            <TreeLogo size="md" withText={true} kannadaText={true} />
+            <span className="text-[10px] sm:text-[11px] font-medium text-slate-500 pl-11 -mt-1 hidden sm:block">
+              {currentLang === 'kn' ? 'ನಿಮಗಾಗಿ ಸರ್ಕಾರಿ ಯೋಜನೆಗಳನ್ನು ಅನ್ವೇಷಿಸಿ' : 'Discover Government Schemes for You'}
+            </span>
           </div>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+          <nav className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <button
                 key={link.id}
                 onClick={() => onNavigate(link.id)}
-                className={`px-3 py-2 rounded-lg font-bold text-sm tracking-wide transition-all cursor-pointer ${
+                className={`px-3.5 py-2 rounded-xl font-semibold text-sm transition-all cursor-pointer ${
                   currentPage === link.id
-                    ? 'bg-saffron-100 text-saffron-900 border-2 border-dark-text shadow-[2px_2px_0px_#20241F]'
-                    : 'text-dark-text hover:bg-gray-100'
+                    ? 'bg-saffron-50 text-saffron-900 border border-saffron-200'
+                    : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
                 {link.label}
@@ -87,11 +75,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Language Switcher */}
             <button
               onClick={toggleLanguage}
-              className="neo-box px-3.5 py-1.5 rounded-xl font-bold text-sm flex items-center gap-1.5 cursor-pointer bg-white"
+              className="px-3 py-1.5 rounded-lg border border-gray-200 text-sm font-semibold flex items-center gap-1.5 cursor-pointer hover:bg-gray-50 transition-colors"
               title="Switch language between English and Kannada"
             >
               <Languages className="w-4 h-4 text-saffron" />
-              <span className={currentLang === 'kn' ? 'font-bold text-saffron' : 'text-muted-text'}>
+              <span className={currentLang === 'kn' ? 'font-bold text-saffron' : 'text-dark-text'}>
                 {currentLang === 'kn' ? 'ಕನ್ನಡ' : 'English'}
               </span>
             </button>
@@ -101,23 +89,23 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => onNavigate('dashboard')}
-                  className="neo-box-green px-3.5 py-1.5 rounded-xl text-sm font-bold flex items-center gap-2 cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg border border-indian-green-200 bg-indian-green-50 text-sm font-semibold text-indian-green-900 flex items-center gap-2 cursor-pointer hover:bg-indian-green-100 transition-colors"
                 >
                   <User className="w-4 h-4 text-indian-green" />
                   <span className="max-w-[120px] truncate">{user.email?.split('@')[0] || 'Citizen'}</span>
                 </button>
                 <button
                   onClick={onSignOut}
-                  className="p-2 border-2 border-dark-text rounded-xl hover:bg-gray-100 cursor-pointer"
+                  className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
                   title={t('nav.sign_out', 'Sign Out')}
                 >
-                  <LogOut className="w-4 h-4 text-dark-text" />
+                  <LogOut className="w-4 h-4 text-muted-text" />
                 </button>
               </div>
             ) : (
               <button
                 onClick={onOpenAuth}
-                className="neo-button-primary px-5 py-2 rounded-xl text-sm font-bold cursor-pointer"
+                className="btn-primary px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer"
               >
                 {t('nav.sign_in', 'Sign In')}
               </button>
@@ -128,16 +116,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex sm:hidden items-center gap-2">
             <button
               onClick={toggleLanguage}
-              className="p-2 rounded-lg border-2 border-dark-text bg-white text-xs font-bold"
+              className="p-1.5 rounded-lg border border-gray-200 bg-white text-xs font-semibold"
             >
               {currentLang === 'kn' ? 'ಕನ್ನಡ' : 'EN'}
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg border-2 border-dark-text bg-white text-dark-text"
+              className="p-2 rounded-lg border border-gray-200 bg-white text-dark-text"
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5 text-dark-text" />}
             </button>
           </div>
         </div>
@@ -145,7 +133,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="sm:hidden border-t-2 border-dark-text bg-warm-white p-4 space-y-2">
+        <div className="sm:hidden border-t border-gray-200 bg-white p-4 space-y-2">
           {navLinks.map((link) => (
             <button
               key={link.id}
@@ -153,10 +141,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onNavigate(link.id);
                 setMobileMenuOpen(false);
               }}
-              className={`w-full text-left px-4 py-3 rounded-xl font-bold text-base border-2 ${
+              className={`w-full text-left px-4 py-2.5 rounded-lg font-semibold text-sm border ${
                 currentPage === link.id
-                  ? 'bg-saffron text-white border-dark-text shadow-[3px_3px_0px_#20241F]'
-                  : 'bg-white border-dark-text text-dark-text'
+                  ? 'bg-saffron text-white border-saffron'
+                  : 'bg-white border-gray-100 text-dark-text'
               }`}
             >
               {link.label}
@@ -170,7 +158,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onSignOut();
                   setMobileMenuOpen(false);
                 }}
-                className="w-full neo-button-secondary py-3 rounded-xl font-bold text-center"
+                className="w-full btn-secondary py-2.5 rounded-lg font-semibold text-center text-sm"
               >
                 {t('nav.sign_out', 'Sign Out')} ({user.email?.split('@')[0]})
               </button>
@@ -180,7 +168,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onOpenAuth();
                   setMobileMenuOpen(false);
                 }}
-                className="w-full neo-button-primary py-3 rounded-xl font-bold text-center"
+                className="w-full btn-primary py-2.5 rounded-lg font-semibold text-center text-sm"
               >
                 {t('nav.sign_in', 'Sign In')}
               </button>

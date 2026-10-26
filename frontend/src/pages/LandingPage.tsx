@@ -7,18 +7,16 @@ import {
   UserCheck, 
   Sparkles, 
   CheckCircle2, 
-  HelpCircle,
-  Briefcase,
   GraduationCap,
   Users,
   Tractor,
   Home,
   HeartPulse,
-  SunMedium,
-  Bus
+  SunMedium
 } from 'lucide-react';
 import { MaximalistBadge } from '../components/MaximalistBadge';
 import { EmptyState } from '../components/EmptyState';
+import { TreeLogo } from '../components/TreeLogo';
 import { Scheme, UserProfile } from '../types';
 
 interface LandingPageProps {
@@ -61,79 +59,88 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   return (
     <div className="space-y-16 sm:space-y-24">
       {/* HERO SECTION */}
-      <section className="relative overflow-hidden pt-8 pb-12 sm:pt-16 sm:pb-20">
-        {/* Background decorative neo-elements */}
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl h-full -z-10 bg-warm-white rounded-3xl border-4 border-dark-text shadow-neo-xl opacity-90" />
-        <div className="absolute top-4 right-10 w-24 h-24 bg-saffron rounded-full border-4 border-dark-text -z-10 hidden md:block" />
-        <div className="absolute bottom-6 left-10 w-28 h-28 bg-indian-green rounded-full border-4 border-dark-text -z-10 hidden md:block" />
-
-        <div className="max-w-5xl mx-auto px-6 text-center space-y-6">
-          {/* Top verified trust badges */}
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-            <MaximalistBadge variant="saffron" icon={<Sparkles className="w-4 h-4" />}>
-              Personal-Profile-First Discovery
-            </MaximalistBadge>
-            <MaximalistBadge variant="green" icon={<ShieldCheck className="w-4 h-4" />}>
-              100% Verified Official Portals
-            </MaximalistBadge>
-            <MaximalistBadge variant="dark" icon={<UserCheck className="w-4 h-4" />}>
-              Zero Aadhaar Required
-            </MaximalistBadge>
+      <section className="relative pt-10 pb-12 sm:pt-16 sm:pb-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-6">
+          
+          {/* Tree Emblem with subtle badge */}
+          <div className="flex flex-col items-center justify-center gap-3">
+            <TreeLogo size="xl" withText={false} />
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+              <MaximalistBadge variant="saffron" icon={<Sparkles className="w-3.5 h-3.5" />}>
+                Live Online Search
+              </MaximalistBadge>
+              <MaximalistBadge variant="green" icon={<ShieldCheck className="w-3.5 h-3.5" />}>
+                Official Government Portals
+              </MaximalistBadge>
+              <MaximalistBadge variant="dark" icon={<UserCheck className="w-3.5 h-3.5" />}>
+                Zero Aadhaar Required
+              </MaximalistBadge>
+            </div>
           </div>
 
           {/* Hero Headline */}
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black text-dark-text tracking-tight leading-[1.08] max-w-4xl mx-auto">
-            {t('brand.hero_headline', 'The Benefits You Deserve. The Schemes You Should Know.')}
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-heading font-extrabold text-slate-900 tracking-tight leading-[1.12]">
+            Find Government Schemes You May Qualify For
           </h1>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-xl text-muted-text font-medium max-w-2xl mx-auto leading-relaxed">
-            {t(
-              'brand.hero_subheadline',
-              'A privacy-first civic platform that matches your personal profile with genuine Karnataka and Central government welfare schemes without intermediaries or paperwork confusion.'
-            )}
+          <p className="text-base sm:text-lg text-slate-600 font-normal max-w-2xl mx-auto leading-relaxed">
+            A privacy-first civic platform that searches the live internet for relevant Karnataka and Central government welfare schemes based on your personal criteria, with clear bilingual explanations and direct official links.
           </p>
 
           {/* Interactive Search Bar */}
-          <form onSubmit={handleSearchSubmit} className="max-w-2xl mx-auto pt-2">
-            <div className="flex flex-col sm:flex-row items-stretch gap-2 bg-white p-2 border-3 border-dark-text shadow-neo rounded-2xl">
+          <form onSubmit={handleSearchSubmit} className="max-w-xl mx-auto pt-2">
+            <div className="flex items-center gap-2 bg-white p-1.5 border border-slate-200 shadow-xs rounded-xl focus-within:border-saffron focus-within:ring-2 focus-within:ring-saffron/20 transition-all">
               <div className="flex-1 flex items-center px-3">
-                <Search className="w-5 h-5 text-muted-text shrink-0 mr-2" />
+                <Search className="w-4 h-4 text-slate-400 shrink-0 mr-2" />
                 <input
                   type="text"
                   value={searchInput}
                   onChange={e => setSearchInput(e.target.value)}
                   placeholder={t('hero.search_placeholder', 'Search by scheme name, department, or keyword...')}
-                  className="w-full py-2.5 text-sm sm:text-base font-semibold text-dark-text placeholder:text-muted-text focus:outline-none"
+                  className="w-full py-2 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none"
                 />
               </div>
               <button
                 type="submit"
-                className="neo-button-primary px-6 py-3 rounded-xl text-sm sm:text-base font-bold flex items-center justify-center gap-2 cursor-pointer"
+                className="btn-primary px-5 py-2 rounded-lg text-sm font-semibold flex items-center gap-1.5 cursor-pointer shrink-0"
               >
-                <span>{t('hero.btn_find_schemes', 'Find My Schemes')}</span>
+                <span>Find My Schemes</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </form>
 
-          {/* CTAs */}
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+          {/* Primary and Secondary CTAs */}
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
             <button
-              onClick={onOpenProfile}
-              className="neo-button-green px-6 py-3.5 rounded-xl text-base font-bold flex items-center gap-2 cursor-pointer shadow-neo-green"
+              onClick={() => onNavigate('live-discovery')}
+              className="px-6 py-2.5 bg-saffron text-white hover:bg-saffron-600 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer shadow-xs transition-colors"
             >
-              <UserCheck className="w-5 h-5" />
-              <span>{profile ? 'View My Citizen Matches' : 'Build My Profile & Match'}</span>
+              <Sparkles className="w-4 h-4" />
+              <span>Find My Schemes</span>
+              <ArrowRight className="w-4 h-4" />
             </button>
 
             <button
-              onClick={() => onNavigate('explore')}
-              className="neo-button-secondary px-6 py-3.5 rounded-xl text-base font-bold flex items-center gap-2 cursor-pointer"
+              onClick={onOpenProfile}
+              className="px-5 py-2.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-colors"
             >
-              <span>{t('hero.btn_explore_all', 'Explore All Schemes')}</span>
-              <ArrowRight className="w-4 h-4" />
+              <UserCheck className="w-4 h-4 text-emerald-700" />
+              <span>{profile ? 'Edit My Citizen Profile' : 'Set Up Profile'}</span>
             </button>
+
+            <button
+              onClick={() => onNavigate('how-it-works')}
+              className="px-5 py-2.5 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-colors"
+            >
+              <span>How It Works</span>
+            </button>
+          </div>
+
+          {/* Disclaimer & Explanation */}
+          <div className="pt-2 text-xs text-slate-500 max-w-xl mx-auto leading-relaxed">
+            NammaSeve is an independent information platform. Discovery results are informational and final eligibility is determined solely by the relevant government department or authority.
           </div>
         </div>
       </section>
@@ -155,37 +162,37 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <MaximalistBadge variant="green" size="sm">
                   Verified Catalog
                 </MaximalistBadge>
-                <h2 className="text-2xl sm:text-4xl font-heading font-black text-dark-text mt-1">
+                <h2 className="text-2xl sm:text-3xl font-heading font-bold text-dark-text mt-1">
                   Featured Government Schemes
                 </h2>
               </div>
               <button
                 onClick={() => onNavigate('explore')}
-                className="neo-button-secondary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-1.5 self-start cursor-pointer"
+                className="btn-secondary px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 self-start cursor-pointer"
               >
                 <span>View all {schemes.length} schemes</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {schemes.slice(0, 3).map(s => (
-                <div key={s.id} className="neo-box p-6 rounded-2xl bg-white space-y-3">
+                <div key={s.id} className="minimal-card p-6 bg-white space-y-3">
                   <div className="flex items-center justify-between">
                     <MaximalistBadge variant={s.scheme_level === 'state' ? 'saffron' : 'dark'} size="sm">
                       {s.scheme_level === 'state' ? 'Karnataka' : 'Central'}
                     </MaximalistBadge>
-                    <span className="text-xs font-bold text-muted-text">{s.category}</span>
+                    <span className="text-xs text-muted-text">{s.category}</span>
                   </div>
-                  <h3 className="text-xl font-heading font-black text-dark-text line-clamp-2">
+                  <h3 className="text-lg font-heading font-bold text-dark-text line-clamp-2">
                     {s.name}
                   </h3>
-                  <p className="text-xs font-bold text-indian-green uppercase">{s.department}</p>
-                  <p className="text-sm text-muted-text line-clamp-3">{s.description}</p>
+                  <p className="text-xs font-semibold text-indian-green uppercase">{s.department}</p>
+                  <p className="text-xs text-muted-text line-clamp-3 leading-relaxed">{s.description}</p>
                   <div className="pt-2">
                     <button
                       onClick={() => onNavigate('explore')}
-                      className="neo-button-primary w-full py-2 rounded-xl text-xs font-bold text-center"
+                      className="btn-primary w-full py-2 rounded-lg text-xs font-semibold text-center"
                     >
                       View Details & Check Eligibility
                     </button>
@@ -198,52 +205,52 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* THREE-STEP PROCESS SECTION */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="text-center space-y-3 mb-12">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6">
+        <div className="text-center space-y-2 mb-10">
           <MaximalistBadge variant="saffron">
             How It Works
           </MaximalistBadge>
-          <h2 className="text-3xl sm:text-5xl font-heading font-black text-dark-text">
+          <h2 className="text-2xl sm:text-4xl font-heading font-bold text-dark-text">
             {t('steps.title', 'Three Steps to Unlock Your Entitlements')}
           </h2>
-          <p className="text-base sm:text-lg text-muted-text max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-muted-text max-w-xl mx-auto">
             {t('steps.subtitle', 'No agents, no guesswork. Simple, deterministic matching based on verified government orders.')}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          <div className="neo-box p-6 sm:p-8 rounded-2xl bg-white space-y-4 relative overflow-hidden">
-            <div className="w-12 h-12 rounded-xl bg-saffron text-white font-black text-xl flex items-center justify-center border-2 border-dark-text shadow-[3px_3px_0px_#20241F]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="minimal-card p-6 bg-white space-y-3">
+            <div className="w-9 h-9 rounded-lg bg-saffron-50 text-saffron font-bold text-base flex items-center justify-center border border-saffron-200">
               1
             </div>
-            <h3 className="text-xl font-heading font-black text-dark-text">
+            <h3 className="text-base font-heading font-bold text-dark-text">
               {t('steps.step1_title', '1. Build Your Profile')}
             </h3>
-            <p className="text-sm text-muted-text leading-relaxed">
+            <p className="text-xs sm:text-sm text-muted-text leading-relaxed">
               {t('steps.step1_desc', 'Share your basic demographic, education, and occupation details voluntarily. We never ask for Aadhaar, bank credentials, or OTPs.')}
             </p>
           </div>
 
-          <div className="neo-box p-6 sm:p-8 rounded-2xl bg-white space-y-4 relative overflow-hidden">
-            <div className="w-12 h-12 rounded-xl bg-indian-green text-white font-black text-xl flex items-center justify-center border-2 border-dark-text shadow-[3px_3px_0px_#20241F]">
+          <div className="minimal-card p-6 bg-white space-y-3">
+            <div className="w-9 h-9 rounded-lg bg-indian-green-50 text-indian-green font-bold text-base flex items-center justify-center border border-indian-green-200">
               2
             </div>
-            <h3 className="text-xl font-heading font-black text-dark-text">
+            <h3 className="text-base font-heading font-bold text-dark-text">
               {t('steps.step2_title', '2. Deterministic Matching')}
             </h3>
-            <p className="text-sm text-muted-text leading-relaxed">
+            <p className="text-xs sm:text-sm text-muted-text leading-relaxed">
               {t('steps.step2_desc', 'Our dynamic engine evaluates official gazettes and eligibility rules against your profile to find schemes you qualify for.')}
             </p>
           </div>
 
-          <div className="neo-box p-6 sm:p-8 rounded-2xl bg-white space-y-4 relative overflow-hidden">
-            <div className="w-12 h-12 rounded-xl bg-dark-text text-white font-black text-xl flex items-center justify-center border-2 border-dark-text shadow-[3px_3px_0px_#20241F]">
+          <div className="minimal-card p-6 bg-white space-y-3">
+            <div className="w-9 h-9 rounded-lg bg-gray-100 text-dark-text font-bold text-base flex items-center justify-center border border-gray-200">
               3
             </div>
-            <h3 className="text-xl font-heading font-black text-dark-text">
+            <h3 className="text-base font-heading font-bold text-dark-text">
               {t('steps.step3_title', '3. Clear Guidance & Official Links')}
             </h3>
-            <p className="text-sm text-muted-text leading-relaxed">
+            <p className="text-xs sm:text-sm text-muted-text leading-relaxed">
               {t('steps.step3_desc', 'Understand benefits, required documents, and step-by-step application instructions with official direct portal links.')}
             </p>
           </div>
@@ -251,30 +258,30 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* SCHEME CATEGORIES SECTION */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="text-center space-y-3 mb-10">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6">
+        <div className="text-center space-y-2 mb-8">
           <MaximalistBadge variant="green">
             Sectors Covered
           </MaximalistBadge>
-          <h2 className="text-3xl sm:text-4xl font-heading font-black text-dark-text">
+          <h2 className="text-2xl sm:text-3xl font-heading font-bold text-dark-text">
             Key Government Welfare Sectors
           </h2>
-          <p className="text-sm sm:text-base text-muted-text max-w-xl mx-auto">
+          <p className="text-xs sm:text-sm text-muted-text max-w-md mx-auto">
             From direct benefit transfers (DBT) to educational scholarships and renewable subsidies.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {categories.map((cat, i) => (
             <div
               key={i}
               onClick={() => onNavigate('explore')}
-              className="neo-box p-5 rounded-2xl bg-white hover:border-saffron cursor-pointer space-y-2 group transition-all"
+              className="minimal-card p-4 bg-white hover:border-saffron/40 cursor-pointer space-y-2 group transition-all"
             >
-              <div className="p-2.5 rounded-xl bg-warm-white border-2 border-dark-text inline-block group-hover:scale-105 transition-transform">
+              <div className="p-2 rounded-lg bg-gray-50 border border-gray-100 inline-block">
                 {cat.icon}
               </div>
-              <h4 className="font-heading font-black text-lg text-dark-text group-hover:text-saffron transition-colors">
+              <h4 className="font-heading font-bold text-sm sm:text-base text-dark-text group-hover:text-saffron transition-colors">
                 {cat.name}
               </h4>
               <p className="text-xs text-muted-text leading-relaxed">
@@ -286,42 +293,42 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* PRIVACY & CITIZEN PLEDGE SECTION */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="bg-white border-4 border-dark-text shadow-neo-xl rounded-3xl p-8 sm:p-12 relative overflow-hidden">
-          <div className="max-w-3xl space-y-6">
-            <MaximalistBadge variant="green" icon={<ShieldCheck className="w-4 h-4" />}>
+      <section className="max-w-5xl mx-auto px-4 sm:px-6">
+        <div className="bg-white border border-gray-200 rounded-2xl p-6 sm:p-10 shadow-xs relative">
+          <div className="max-w-2xl space-y-5">
+            <MaximalistBadge variant="green" icon={<ShieldCheck className="w-3.5 h-3.5" />}>
               Constitutional Privacy
             </MaximalistBadge>
-            <h2 className="text-3xl sm:text-5xl font-heading font-black text-dark-text leading-tight">
+            <h2 className="text-2xl sm:text-4xl font-heading font-bold text-dark-text leading-tight">
               We Never Ask for Aadhaar, Bank Details, or Passwords.
             </h2>
-            <p className="text-base sm:text-lg text-muted-text leading-relaxed">
+            <p className="text-sm sm:text-base text-muted-text leading-relaxed">
               Discovering public welfare shouldn't mean compromising your digital safety. NammaSeve uses general eligibility parameters to calculate matching schemes, and directs you to apply safely on official government portals.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-indian-green shrink-0" />
-                <span className="text-sm font-bold text-dark-text">Zero Fabricated Recommendations</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-indian-green shrink-0" />
+                <span className="text-xs sm:text-sm font-medium text-dark-text">Zero Fabricated Recommendations</span>
               </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-indian-green shrink-0" />
-                <span className="text-sm font-bold text-dark-text">Deterministic Rule Checks</span>
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-indian-green shrink-0" />
+                <span className="text-xs sm:text-sm font-medium text-dark-text">Deterministic Rule Checks</span>
               </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-indian-green shrink-0" />
-                <span className="text-sm font-bold text-dark-text">Instant Data Erasure Anytime</span>
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-indian-green shrink-0" />
+                <span className="text-xs sm:text-sm font-medium text-dark-text">Instant Data Erasure Anytime</span>
               </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-indian-green shrink-0" />
-                <span className="text-sm font-bold text-dark-text">Bilingual in Kannada & English</span>
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-indian-green shrink-0" />
+                <span className="text-xs sm:text-sm font-medium text-dark-text">Bilingual in Kannada & English</span>
               </div>
             </div>
 
-            <div className="pt-4 flex flex-wrap gap-4">
+            <div className="pt-2">
               <button
                 onClick={onOpenPrivacy}
-                className="neo-button-secondary px-5 py-2.5 rounded-xl text-sm font-bold cursor-pointer"
+                className="btn-secondary px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer"
               >
                 Read Citizen Privacy Pledge
               </button>
@@ -331,18 +338,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* FINAL CALL TO ACTION */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-6 pb-6">
-        <h2 className="text-3xl sm:text-5xl font-heading font-black text-dark-text">
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 text-center space-y-4 pb-6">
+        <h2 className="text-2xl sm:text-3xl font-heading font-bold text-dark-text">
           Ready to Find the Welfare Schemes You Deserve?
         </h2>
-        <p className="text-base sm:text-lg text-muted-text max-w-xl mx-auto">
+        <p className="text-sm text-muted-text max-w-lg mx-auto">
           Take 2 minutes to create your citizen profile and start matching opportunities.
         </p>
         <button
           onClick={onOpenProfile}
-          className="neo-button-primary px-8 py-4 rounded-2xl text-lg font-black inline-flex items-center gap-2 cursor-pointer shadow-neo-lg"
+          className="btn-primary px-7 py-3 rounded-xl text-base font-bold inline-flex items-center gap-2 cursor-pointer shadow-sm"
         >
-          <UserCheck className="w-6 h-6" />
+          <UserCheck className="w-5 h-5" />
           <span>Get Started with My Profile</span>
         </button>
       </section>

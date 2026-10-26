@@ -15,6 +15,9 @@ import { AuthModal } from './features/auth/AuthModal';
 import { Scheme, UserProfile } from './types';
 import { supabase, isSupabaseConfigured } from './lib/supabase';
 
+import { LiveDiscoveryPage } from './pages/LiveDiscoveryPage';
+import { DiscoveredScheme } from './types';
+
 export function App() {
   const { i18n } = useTranslation();
   const [currentPage, setCurrentPage] = useState<string>('home');
@@ -38,10 +41,15 @@ export function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // Saved Schemes Bookmarks
+  // Saved Schemes Bookmarks (Both catalog scheme IDs and discovered scheme names)
   const [savedSchemeIds, setSavedSchemeIds] = useState<Set<string>>(() => {
     const saved = localStorage.getItem('nammaseve_saved_ids');
     return saved ? new Set(JSON.parse(saved)) : new Set();
+  });
+
+  const [savedDiscoveredSchemes, setSavedDiscoveredSchemes] = useState<DiscoveredScheme[]>(() => {
+    const saved = localStorage.getItem('nammaseve_saved_discovered_schemes');
+    return saved ? JSON.parse(saved) : [];
   });
 
   // Modals
@@ -69,7 +77,6 @@ export function App() {
         .eq('status', 'published');
 
       if (!error && data) {
-        // Combine DB schemes with any locally imported administrative schemes
         const localImported = JSON.parse(localStorage.getItem('nammaseve_imported_schemes') || '[]');
         const dbSlugs = new Set(data.map(d => d.slug));
         const nonDuplicateLocal = localImported.filter((l: Scheme) => !dbSlugs.has(l.slug));
@@ -92,7 +99,6 @@ export function App() {
         if (session?.user) {
           setUser(session.user);
           localStorage.setItem('nammaseve_user', JSON.stringify(session.user));
-          // Load profile from Supabase
           supabase
             .from('profiles')
             .select('*')
@@ -127,7 +133,6 @@ export function App() {
     localStorage.setItem('nammaseve_profile', JSON.stringify(newProfile));
     setIsProfileModalOpen(false);
 
-    // Sync with Supabase if authenticated
     if (user && isSupabaseConfigured) {
       try {
         await supabase
@@ -160,8 +165,7 @@ export function App() {
       }
     }
 
-    // Direct user to Dashboard to see their matches
-    setCurrentPage('dashboard');
+    setCurrentPage('live-discovery');
   };
 
   // Permanently delete citizen profile
@@ -169,7 +173,9 @@ export function App() {
     setProfile(null);
     localStorage.removeItem('nammaseve_profile');
     localStorage.removeItem('nammaseve_saved_ids');
+    localStorage.removeItem('nammaseve_saved_discovered_schemes');
     setSavedSchemeIds(new Set());
+    setSavedDiscoveredSchemes([]);
 
     if (user && isSupabaseConfigured) {
       try {
@@ -181,7 +187,7 @@ export function App() {
     setCurrentPage('home');
   };
 
-  // Toggle Save / Bookmark
+  // Toggle Save Catalog Scheme
   const handleToggleSave = async (schemeId: string) => {
     setSavedSchemeIds(prev => {
       const next = new Set(prev);
@@ -199,6 +205,47 @@ export function App() {
         await supabase.from('saved_schemes').delete().eq('user_id', user.id).eq('scheme_id', schemeId);
       } else {
         await supabase.from('saved_schemes').insert({ user_id: user.id, scheme_id: schemeId });
+      }
+    }
+  };
+
+  // Toggle Save Discovered Scheme
+  const handleToggleSaveDiscovered = async (discScheme: DiscoveredScheme) => {
+    const key = discScheme.name;
+    const isCurrentlySaved = savedSchemeIds.has(key);
+
+    setSavedSchemeIds(prev => {
+      const next = new Set(prev);
+      if (isCurrentlySaved) next.delete(key);
+      else next.add(key);
+      localStorage.setItem('nammaseve_saved_ids', JSON.stringify(Array.from(next)));
+      return next;
+    });
+
+    setSavedDiscoveredSchemes(prev => {
+      let nextList: DiscoveredScheme[];
+      if (isCurrentlySaved) {
+        nextList = prev.filter(s => s.name !== key);
+      } else {
+        nextList = [...prev, discScheme];
+      }
+      localStorage.setItem('nammaseve_saved_discovered_schemes', JSON.stringify(nextList));
+      return nextList;
+    });
+
+    if (user && isSupabaseConfigured) {
+      try {
+        if (isCurrentlySaved) {
+          await supabase.from('saved_schemes').delete().eq('user_id', user.id).eq('scheme_key', key);
+        } else {
+          await supabase.from('saved_schemes').insert({
+            user_id: user.id,
+            scheme_key: key,
+            scheme_data: discScheme,
+          });
+        }
+      } catch (err) {
+        console.warn('Failed saving discovered scheme to Supabase:', err);
       }
     }
   };
@@ -227,7 +274,13 @@ export function App() {
       {/* Top Navigation */}
       <Navbar
         currentPage={currentPage}
-        onNavigate={setCurrentPage}
+        onNavigate={(page) => {
+          if (page === 'saved') {
+            setCurrentPage('dashboard');
+          } else {
+            setCurrentPage(page);
+          }
+        }}
         user={user}
         onOpenAuth={() => setIsAuthModalOpen(true)}
         onSignOut={handleSignOut}
@@ -239,10 +292,28 @@ export function App() {
           <LandingPage
             schemes={schemes}
             profile={profile}
-            onNavigate={setCurrentPage}
+            onNavigate={(page) => {
+              if (page === 'explore') setCurrentPage('live-discovery');
+              else setCurrentPage(page);
+            }}
             onOpenProfile={() => setIsProfileModalOpen(true)}
             onOpenPrivacy={() => setIsPrivacyModalOpen(true)}
-            onSearch={setSearchQuery}
+            onSearch={(q) => {
+              setSearchQuery(q);
+              setCurrentPage('live-discovery');
+            }}
+          />
+        )}
+
+        {(currentPage === 'live-discovery' || currentPage === 'discover') && (
+          <LiveDiscoveryPage
+            profile={profile}
+            user={user}
+            savedSchemeKeys={savedSchemeIds}
+            onToggleSaveScheme={handleToggleSaveDiscovered}
+            onOpenProfile={() => setIsProfileModalOpen(true)}
+            onNavigateHowItWorks={() => setCurrentPage('how-it-works')}
+            initialQuery={searchQuery}
           />
         )}
 
@@ -281,7 +352,7 @@ export function App() {
         {currentPage === 'how-it-works' && (
           <HowItWorksPage
             onOpenProfile={() => setIsProfileModalOpen(true)}
-            onNavigateExplore={() => setCurrentPage('explore')}
+            onNavigateExplore={() => setCurrentPage('live-discovery')}
           />
         )}
 

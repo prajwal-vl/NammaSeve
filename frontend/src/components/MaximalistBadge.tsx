@@ -16,19 +16,19 @@ export const MaximalistBadge: React.FC<BadgeProps> = ({
   icon,
   className,
 }) => {
-  const baseClasses = 'inline-flex items-center gap-1.5 font-bold uppercase tracking-wider rounded-neo border-2 border-dark-text transition-transform';
+  const baseClasses = 'inline-flex items-center gap-1.5 font-semibold tracking-normal rounded-full border transition-all select-none';
   
   const sizeClasses = {
-    sm: 'text-xs px-2.5 py-0.5 shadow-[2px_2px_0px_#20241F]',
-    md: 'text-xs md:text-sm px-3.5 py-1 shadow-[3px_3px_0px_#20241F]',
+    sm: 'text-xs px-2.5 py-0.5',
+    md: 'text-xs sm:text-sm px-3 py-1',
   };
 
   const variantClasses = {
-    saffron: 'bg-saffron text-white',
-    green: 'bg-indian-green text-white',
-    dark: 'bg-dark-text text-white',
-    outline: 'bg-warm-white text-dark-text',
-    yellow: 'bg-[#FFDE59] text-dark-text',
+    saffron: 'bg-saffron-50 text-saffron-900 border-saffron-200',
+    green: 'bg-indian-green-50 text-indian-green-900 border-indian-green-200',
+    dark: 'bg-gray-100 text-gray-800 border-gray-200',
+    outline: 'bg-white text-dark-text border-gray-200',
+    yellow: 'bg-amber-50 text-amber-900 border-amber-200',
   };
 
   return (

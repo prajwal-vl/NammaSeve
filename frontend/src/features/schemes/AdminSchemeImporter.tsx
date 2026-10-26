@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
   FileText, 
@@ -8,12 +8,15 @@ import {
   Download, 
   ShieldCheck, 
   RefreshCw,
-  Copy,
-  Check
+  Clock,
+  ExternalLink,
+  Lock,
+  Layers
 } from 'lucide-react';
-import { Scheme } from '../../types';
+import { Scheme, ProviderMetadata } from '../../types';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { MaximalistBadge } from '../../components/MaximalistBadge';
+import { fetchProvidersList, triggerProviderSync } from '../../lib/edgeFunctions';
 
 interface AdminSchemeImporterProps {
   onImportComplete?: (schemes: Scheme[]) => void;
@@ -21,7 +24,11 @@ interface AdminSchemeImporterProps {
 
 export const AdminSchemeImporter: React.FC<AdminSchemeImporterProps> = ({ onImportComplete }) => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<'json' | 'csv'>('json');
+  const [activeTab, setActiveTab] = useState<'providers' | 'json' | 'csv'>('providers');
+  const [providers, setProviders] = useState<ProviderMetadata[]>([]);
+  const [syncingProviderId, setSyncingProviderId] = useState<string | null>(null);
+  const [providerSyncResult, setProviderSyncResult] = useState<any | null>(null);
+
   const [jsonInput, setJsonInput] = useState('');
   const [dryRun, setDryRun] = useState(true);
   const [isValidating, setIsValidating] = useState(false);
@@ -34,36 +41,42 @@ export const AdminSchemeImporter: React.FC<AdminSchemeImporterProps> = ({ onImpo
   } | null>(null);
   const [importStatus, setImportStatus] = useState<string | null>(null);
 
+  useEffect(() => {
+    fetchProvidersList().then(setProviders);
+  }, []);
+
   const sampleJsonTemplate = `[
   {
-    "slug": "sample-verified-scheme",
-    "name": "Karnataka Verified Welfare Scheme",
-    "kannada_name": "ಕರ್ನಾಟಕ ಪರಿಶೀಲಿಸಿದ ಕಲ್ಯಾಣ ಯೋಜನೆ",
-    "description": "Comprehensive direct benefit assistance for eligible citizens.",
-    "kannada_description": "ಅರ್ಹ ನಾಗರಿಕರಿಗೆ ಸಮಗ್ರ ನೇರ ಸವಲತ್ತು ನೆರವು.",
+    "slug": "karnataka-reviewed-welfare-scheme",
+    "name": "Karnataka Verified Citizen Welfare Scheme",
+    "kannada_name": "ಕರ್ನಾಟಕ ಪರಿಶೀಲಿಸಿದ ನಾಗರಿಕ ಕಲ್ಯಾಣ ಯೋಜನೆ",
+    "description": "Comprehensive welfare entitlement for eligible domiciled residents of Karnataka.",
+    "kannada_description": "ಕರ್ನಾಟಕದ ಅರ್ಹ ನಿವಾಸಿಗಳಿಗೆ ಸಮಗ್ರ ಕಲ್ಯಾಣ ಸವಲತ್ತು.",
     "scheme_level": "state",
     "state_code": "KA",
-    "department": "Department of Social Welfare, Govt of Karnataka",
+    "department": "Department of Social Welfare, Karnataka",
     "kannada_department": "ಸಮಾಜ ಕಲ್ಯಾಣ ಇಲಾಖೆ, ಕರ್ನಾಟಕ ಸರ್ಕಾರ",
     "category": "Social Welfare & Empowerment",
     "benefits": [
-      "Financial assistance credited directly to Aadhaar-seeded bank account",
-      "Subsidized skill training and employment assistance"
+      "Financial assistance credited directly to Aadhaar-linked bank account",
+      "Subsidized skill development and educational support"
     ],
-    "eligibility_summary": "Resident of Karnataka with annual family income within prescribed guidelines.",
-    "kannada_eligibility_summary": "ನಿಗದಿತ ಮಾರ್ಗಸೂಚಿಗಳ ವ್ಯಾಪ್ತಿಯಲ್ಲಿ ವಾರ್ಷಿಕ ಕುಟುಂಬ ಆದಾಯ ಹೊಂದಿರುವ ಕರ್ನಾಟಕದ ನಿವಾಸಿಗಳು.",
+    "eligibility_summary": "Domiciled in Karnataka with family income within prescribed statutory limits.",
+    "kannada_eligibility_summary": "ಕರ್ನಾಟಕದಲ್ಲಿ ವಾಸಿಸುವ ಹಾಗೂ ನಿಗದಿತ ವಾರ್ಷಿಕ ಆದಾಯ ಮಿತಿಯೊಳಗಿರುವ ನಾಗರಿಕರು.",
     "application_steps": [
-      "Visit the official Karnataka Seva Sindhu portal",
-      "Authenticate with Aadhaar and enter ration card / family ID",
-      "Submit required verification documents and download acknowledgement"
+      "Visit the official Karnataka Seva Sindhu or Nadakacheri portal",
+      "Authenticate with Aadhaar and enter ration card details",
+      "Submit required verification certificates"
     ],
     "documents_required": [
       "Aadhaar Card",
-      "Karnataka Domicile / Study Certificate",
+      "Karnataka Domicile Certificate",
       "Income Certificate issued by Nadakacheri",
       "Bank Account Passbook"
     ],
     "official_application_url": "https://sevasindhuservices.karnataka.gov.in/",
+    "official_info_url": "https://sevasindhu.karnataka.gov.in/",
+    "source_identifier": "KA_SWD_2024_01",
     "status": "published",
     "sources": [
       {
@@ -79,7 +92,7 @@ export const AdminSchemeImporter: React.FC<AdminSchemeImporterProps> = ({ onImpo
         "required_attribute": "state",
         "operator": "eq",
         "rule_value": "Karnataka",
-        "source_reference": "Official Govt Notification No. SWD 104"
+        "source_reference": "G.O. No. SWD 104 MMB 2024"
       }
     ]
   }
@@ -93,6 +106,19 @@ export const AdminSchemeImporter: React.FC<AdminSchemeImporterProps> = ({ onImpo
     a.download = 'nammaseve_scheme_import_schema.json';
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleSyncProvider = async (providerId: string) => {
+    setSyncingProviderId(providerId);
+    setProviderSyncResult(null);
+    try {
+      const res = await triggerProviderSync(providerId);
+      setProviderSyncResult(res);
+    } catch (err: unknown) {
+      setProviderSyncResult({ success: false, errors: [err instanceof Error ? err.message : 'Sync failed'] });
+    } finally {
+      setSyncingProviderId(null);
+    }
   };
 
   const handleValidate = () => {
@@ -161,7 +187,11 @@ export const AdminSchemeImporter: React.FC<AdminSchemeImporterProps> = ({ onImpo
             application_steps: item.application_steps || [],
             documents_required: item.documents_required || [],
             official_application_url: item.official_application_url,
+            official_info_url: item.official_info_url || undefined,
+            source_identifier: item.source_identifier || `manual_${item.slug}`,
+            provider_id: item.provider_id || 'reviewed_file',
             status: item.status || 'published',
+            is_stale: Boolean(item.is_stale),
             sources: item.sources || [],
             rules: item.rules || [],
             created_at: new Date().toISOString(),
@@ -200,7 +230,6 @@ export const AdminSchemeImporter: React.FC<AdminSchemeImporterProps> = ({ onImpo
     try {
       const schemesToSave = validationResult.parsedSchemes;
 
-      // 1. If Supabase is configured and reachable, insert into PostgreSQL
       if (isSupabaseConfigured) {
         for (const s of schemesToSave) {
           const { data: inserted, error } = await supabase
@@ -222,15 +251,15 @@ export const AdminSchemeImporter: React.FC<AdminSchemeImporterProps> = ({ onImpo
               application_steps: s.application_steps,
               documents_required: s.documents_required,
               official_application_url: s.official_application_url,
+              official_info_url: s.official_info_url,
+              source_identifier: s.source_identifier,
               status: s.status,
+              is_stale: s.is_stale,
             })
             .select()
             .single();
 
-          if (error) {
-            console.warn('Supabase DB upsert notice:', error.message);
-          } else if (inserted && s.rules) {
-            // Upsert rules
+          if (!error && inserted && s.rules) {
             for (const r of s.rules) {
               await supabase.from('eligibility_rules').insert({
                 scheme_id: inserted.id,
@@ -245,7 +274,6 @@ export const AdminSchemeImporter: React.FC<AdminSchemeImporterProps> = ({ onImpo
         }
       }
 
-      // 2. Also save to verified local state and notify parent
       const existingLocal = JSON.parse(localStorage.getItem('nammaseve_imported_schemes') || '[]');
       const combined = [...existingLocal, ...schemesToSave];
       localStorage.setItem('nammaseve_imported_schemes', JSON.stringify(combined));
@@ -266,19 +294,19 @@ export const AdminSchemeImporter: React.FC<AdminSchemeImporterProps> = ({ onImpo
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 sm:p-8 bg-white border-4 border-dark-text shadow-neo-xl rounded-2xl">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b-2 border-dark-text mb-6">
+    <div className="max-w-4xl mx-auto p-6 sm:p-8 bg-white border border-gray-200 shadow-sm rounded-2xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-100 mb-6">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <MaximalistBadge variant="dark" size="sm">
               Administrative Ingestion
             </MaximalistBadge>
-            <span className="text-xs font-bold text-indian-green flex items-center gap-1">
+            <span className="text-xs font-semibold text-indian-green flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5" />
-              Verified Schema Validation
+              Verified Scheme Standards
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-heading font-black text-dark-text">
+          <h2 className="text-2xl sm:text-3xl font-heading font-bold text-dark-text">
             {t('admin.title', 'Administrative Scheme Ingestion Portal')}
           </h2>
           <p className="text-xs sm:text-sm text-muted-text mt-1">
@@ -288,7 +316,7 @@ export const AdminSchemeImporter: React.FC<AdminSchemeImporterProps> = ({ onImpo
 
         <button
           onClick={handleDownloadTemplate}
-          className="neo-button-secondary px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 shrink-0 self-start sm:self-auto cursor-pointer"
+          className="btn-secondary px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 shrink-0 self-start sm:self-auto cursor-pointer"
         >
           <Download className="w-4 h-4 text-saffron" />
           <span>{t('admin.sample_download', 'Download Schema Template')}</span>
@@ -296,84 +324,188 @@ export const AdminSchemeImporter: React.FC<AdminSchemeImporterProps> = ({ onImpo
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-6 border-b border-gray-100 pb-2">
         <button
-          onClick={() => setActiveTab('json')}
-          className={`px-4 py-2 rounded-xl font-bold text-sm border-2 cursor-pointer ${
-            activeTab === 'json'
-              ? 'bg-saffron text-white border-dark-text shadow-[2px_2px_0px_#20241F]'
-              : 'bg-warm-white text-dark-text border-gray-300'
+          onClick={() => setActiveTab('providers')}
+          className={`px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm transition-all cursor-pointer ${
+            activeTab === 'providers'
+              ? 'bg-saffron text-white shadow-2xs'
+              : 'bg-white text-muted-text hover:text-dark-text hover:bg-gray-50'
           }`}
         >
-          {t('admin.tab_json', 'JSON Ingestion')}
+          Government Data Providers
+        </button>
+        <button
+          onClick={() => setActiveTab('json')}
+          className={`px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm transition-all cursor-pointer ${
+            activeTab === 'json'
+              ? 'bg-saffron text-white shadow-2xs'
+              : 'bg-white text-muted-text hover:text-dark-text hover:bg-gray-50'
+          }`}
+        >
+          {t('admin.tab_json', 'Reviewed JSON Ingestion')}
         </button>
       </div>
 
-      {/* JSON Input Area */}
-      <div className="space-y-4">
-        <div className="relative">
-          <textarea
-            value={jsonInput}
-            onChange={e => setJsonInput(e.target.value)}
-            rows={12}
-            placeholder="Paste verified scheme JSON records here..."
-            className="neo-input w-full p-4 font-mono text-xs sm:text-sm rounded-xl leading-relaxed"
-          />
+      {/* TAB 1: GOVERNMENT DATA PROVIDERS */}
+      {activeTab === 'providers' && (
+        <div className="space-y-4">
+          <div className="p-4 bg-gray-50/70 border border-gray-200/80 rounded-xl text-xs sm:text-sm text-muted-text leading-relaxed">
+            NammaSeve connects to official data feeds using modular provider adapters. Providers require registered developer credentials or departmental onboarding agreements under Government of India guidelines.
+          </div>
+
+          <div className="space-y-3">
+            {providers.map((p) => (
+              <div key={p.id} className="p-5 border border-gray-200 rounded-xl bg-white hover:border-gray-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-1 max-w-xl">
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-heading font-bold text-dark-text text-base">
+                      {p.name}
+                    </h4>
+                    {p.is_configured ? (
+                      <span className="text-[11px] font-semibold text-indian-green bg-indian-green-50 border border-indian-green-200 px-2 py-0.5 rounded-full">
+                        Configured
+                      </span>
+                    ) : (
+                      <span className="text-[11px] font-semibold text-muted-text bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                        <Lock className="w-3 h-3" />
+                        Credentials Required
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-text leading-relaxed">
+                    {p.description}
+                  </p>
+                  <div className="flex items-center gap-3 pt-1 text-xs">
+                    <a
+                      href={p.portal_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-saffron-700 hover:underline flex items-center gap-1 font-medium"
+                    >
+                      <span>Official Portal</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                    {p.env_keys.length > 0 && (
+                      <span className="text-muted-text font-mono text-[11px]">
+                        Secrets: {p.env_keys.join(', ')}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="shrink-0 self-start sm:self-auto">
+                  <button
+                    onClick={() => handleSyncProvider(p.id)}
+                    disabled={syncingProviderId === p.id}
+                    className="btn-secondary px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${syncingProviderId === p.id ? 'animate-spin' : ''}`} />
+                    <span>Sync Provider Feed</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Provider Sync Output Box */}
+          {providerSyncResult && (
+            <div className={`mt-4 p-4 rounded-xl border text-xs sm:text-sm ${
+              providerSyncResult.success ? 'bg-indian-green-50 border-indian-green-200' : 'bg-amber-50 border-amber-200'
+            }`}>
+              <div className="flex items-center gap-2 font-bold mb-1">
+                {providerSyncResult.success ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 text-indian-green" />
+                    <span className="text-indian-green-900">Provider Sync Completed</span>
+                  </>
+                ) : (
+                  <>
+                    <AlertTriangle className="w-4 h-4 text-amber-700" />
+                    <span className="text-amber-900">Provider Sync Notice</span>
+                  </>
+                )}
+              </div>
+              {providerSyncResult.errors?.map((err: string, i: number) => (
+                <p key={i} className="text-amber-800 text-xs mt-1">{err}</p>
+              ))}
+              {providerSyncResult.auth_instructions && (
+                <p className="text-dark-text text-xs mt-2 font-mono bg-white/70 p-2 rounded border border-amber-200">
+                  {providerSyncResult.auth_instructions}
+                </p>
+              )}
+            </div>
+          )}
         </div>
+      )}
 
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
-          <label className="flex items-center gap-2.5 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={dryRun}
-              onChange={e => setDryRun(e.target.checked)}
-              className="w-5 h-5 rounded accent-saffron cursor-pointer"
+      {/* TAB 2: REVIEWED JSON INGESTION */}
+      {activeTab === 'json' && (
+        <div className="space-y-4">
+          <div className="relative">
+            <textarea
+              value={jsonInput}
+              onChange={e => setJsonInput(e.target.value)}
+              rows={12}
+              placeholder="Paste verified scheme JSON records here..."
+              className="minimal-input w-full p-4 font-mono text-xs sm:text-sm rounded-xl leading-relaxed"
             />
-            <span className="text-xs sm:text-sm font-bold text-dark-text">
-              {t('admin.dry_run_label', 'Dry Run (Validate without saving)')}
-            </span>
-          </label>
+          </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleValidate}
-              disabled={isValidating || !jsonInput.trim()}
-              className="neo-button-secondary px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 cursor-pointer disabled:opacity-50"
-            >
-              <RefreshCw className={`w-4 h-4 ${isValidating ? 'animate-spin' : ''}`} />
-              <span>{t('admin.btn_validate', 'Validate Records')}</span>
-            </button>
+          <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={dryRun}
+                onChange={e => setDryRun(e.target.checked)}
+                className="w-4 h-4 rounded accent-saffron cursor-pointer"
+              />
+              <span className="text-xs sm:text-sm font-semibold text-dark-text">
+                {t('admin.dry_run_label', 'Dry Run (Validate without saving)')}
+              </span>
+            </label>
 
-            {validationResult?.valid && (
+            <div className="flex items-center gap-3">
               <button
-                onClick={handleCommitPublish}
-                disabled={isValidating}
-                className="neo-button-green px-6 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 cursor-pointer"
+                onClick={handleValidate}
+                disabled={isValidating || !jsonInput.trim()}
+                className="btn-secondary px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 cursor-pointer disabled:opacity-50"
               >
-                <CheckCircle2 className="w-4 h-4" />
-                <span>{t('admin.btn_publish', 'Publish Verified Schemes')}</span>
+                <RefreshCw className={`w-4 h-4 ${isValidating ? 'animate-spin' : ''}`} />
+                <span>{t('admin.btn_validate', 'Validate Records')}</span>
               </button>
-            )}
+
+              {validationResult?.valid && (
+                <button
+                  onClick={handleCommitPublish}
+                  disabled={isValidating}
+                  className="btn-green px-5 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 cursor-pointer"
+                >
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>{t('admin.btn_publish', 'Publish Verified Schemes')}</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Validation Feedback & Preview */}
       {validationResult && (
-        <div className={`mt-6 p-4 rounded-xl border-3 ${
-          validationResult.valid ? 'bg-indian-green-50 border-indian-green' : 'bg-red-50 border-red-500'
+        <div className={`mt-6 p-4 rounded-xl border text-sm ${
+          validationResult.valid ? 'bg-indian-green-50/70 border-indian-green-200' : 'bg-red-50 border-red-200'
         }`}>
-          <div className="flex items-center gap-2 mb-2 font-bold text-sm">
+          <div className="flex items-center gap-2 font-bold mb-1">
             {validationResult.valid ? (
               <>
-                <CheckCircle2 className="w-5 h-5 text-indian-green" />
+                <CheckCircle2 className="w-4 h-4 text-indian-green" />
                 <span className="text-indian-green-900">
-                  Validation Passed: {validationResult.recordsCount} record(s) ready for review and publishing.
+                  Validation Passed: {validationResult.recordsCount} record(s) verified for publishing.
                 </span>
               </>
             ) : (
               <>
-                <AlertTriangle className="w-5 h-5 text-red-600" />
+                <AlertTriangle className="w-4 h-4 text-red-600" />
                 <span className="text-red-900">
                   Validation Failed with {validationResult.errors.length} issue(s):
                 </span>
@@ -390,16 +522,16 @@ export const AdminSchemeImporter: React.FC<AdminSchemeImporterProps> = ({ onImpo
           )}
 
           {validationResult.valid && (
-            <div className="mt-3 pt-3 border-t border-indian-green-200">
+            <div className="mt-3 pt-3 border-t border-indian-green-200/80">
               <span className="text-xs font-bold text-dark-text block mb-1">
-                Records to be Published:
+                Records Ready for Review:
               </span>
               <div className="space-y-1">
                 {validationResult.parsedSchemes.map((s, idx) => (
-                  <div key={idx} className="text-xs text-dark-text font-semibold flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-indian-green" />
-                    <span>{s.name} ({s.slug})</span>
-                    <span className="text-muted-text text-[11px]">— {s.department}</span>
+                  <div key={idx} className="text-xs text-dark-text font-medium flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-indian-green" />
+                    <span className="font-semibold">{s.name}</span>
+                    <span className="text-muted-text text-[11px]">({s.department})</span>
                   </div>
                 ))}
               </div>
@@ -410,8 +542,8 @@ export const AdminSchemeImporter: React.FC<AdminSchemeImporterProps> = ({ onImpo
 
       {/* Success Notification */}
       {importStatus && (
-        <div className="mt-6 p-4 bg-indian-green-100 border-2 border-indian-green text-indian-green-900 rounded-xl font-bold text-sm flex items-center gap-2">
-          <CheckCircle2 className="w-5 h-5 text-indian-green shrink-0" />
+        <div className="mt-6 p-4 bg-indian-green-50 border border-indian-green-200 text-indian-green-900 rounded-xl font-semibold text-sm flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-indian-green shrink-0" />
           <span>{importStatus}</span>
         </div>
       )}

@@ -8,9 +8,10 @@
     --color-deep-orange: #D9480F;
     --color-indian-green: #138A36;
     --color-deep-green: #075E2A;
-    --color-warm-white: #FFF9F1;
-    --color-dark-text: #20241F;
-    --color-muted-text: #62665F;
+    --color-warm-white: #FAF9F5;
+    --color-dark-text: #1C211D;
+    --color-muted-text: #575D56;
+    --color-border: #E4E7E2;
   }
 
   body {
@@ -20,119 +21,153 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif;
+    color: var(--color-dark-text);
   }
 }
 
-/* Maximalist Indian Civic-Tech Accents */
-.neo-box {
+/* Accessible Minimalist Indian Civic Design System */
+
+.minimal-card {
   background-color: #FFFFFF;
-  border: 2.5px solid #20241F;
-  box-shadow: 4px 4px 0px #20241F;
-  transition: all 0.15s ease-in-out;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 1px 3px rgba(28, 33, 29, 0.05), 0 1px 2px rgba(28, 33, 29, 0.03);
+  border-radius: 1rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.neo-box:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px #20241F;
+.minimal-card:hover {
+  border-color: #D1D7CE;
+  box-shadow: 0 4px 12px rgba(28, 33, 29, 0.08), 0 2px 4px rgba(28, 33, 29, 0.04);
 }
 
-.neo-box-orange {
+.minimal-card-interactive {
   background-color: #FFFFFF;
-  border: 2.5px solid #20241F;
-  box-shadow: 4px 4px 0px #FF6B00;
-  transition: all 0.15s ease-in-out;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 1px 3px rgba(28, 33, 29, 0.05);
+  border-radius: 1rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.neo-box-orange:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px #FF6B00;
+.minimal-card-interactive:hover {
+  border-color: rgba(255, 107, 0, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 107, 0, 0.08), 0 2px 6px rgba(28, 33, 29, 0.04);
 }
 
-.neo-box-green {
-  background-color: #FFFFFF;
-  border: 2.5px solid #20241F;
-  box-shadow: 4px 4px 0px #138A36;
-  transition: all 0.15s ease-in-out;
-}
-
-.neo-box-green:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px #138A36;
-}
-
-.neo-button-primary {
+/* Primary Accessible Buttons */
+.neo-button-primary,
+.btn-primary {
   background-color: #FF6B00;
   color: #FFFFFF;
-  font-weight: 700;
-  border: 2.5px solid #20241F;
-  box-shadow: 3px 3px 0px #20241F;
-  transition: all 0.12s ease-in-out;
-}
-
-.neo-button-primary:hover {
-  background-color: #D9480F;
-  transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0px #20241F;
-}
-
-.neo-button-primary:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px #20241F;
-}
-
-.neo-button-green {
-  background-color: #138A36;
-  color: #FFFFFF;
-  font-weight: 700;
-  border: 2.5px solid #20241F;
-  box-shadow: 3px 3px 0px #20241F;
-  transition: all 0.12s ease-in-out;
-}
-
-.neo-button-green:hover {
-  background-color: #075E2A;
-  transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0px #20241F;
-}
-
-.neo-button-green:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px #20241F;
-}
-
-.neo-button-secondary {
-  background-color: #FFFFFF;
-  color: #20241F;
-  font-weight: 700;
-  border: 2.5px solid #20241F;
-  box-shadow: 3px 3px 0px #20241F;
-  transition: all 0.12s ease-in-out;
-}
-
-.neo-button-secondary:hover {
-  background-color: #FFF4EB;
-  transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0px #20241F;
-}
-
-.neo-input {
-  border: 2px solid #20241F;
-  background-color: #FFFFFF;
-  color: #20241F;
-  box-shadow: 2px 2px 0px #20241F;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 2px rgba(217, 72, 15, 0.2);
+  border-radius: 0.75rem;
   transition: all 0.15s ease-in-out;
 }
 
-.neo-input:focus {
-  outline: none;
-  border-color: #FF6B00;
-  box-shadow: 4px 4px 0px #FF6B00;
+.neo-button-primary:hover,
+.btn-primary:hover {
+  background-color: #D9480F;
+  box-shadow: 0 4px 8px rgba(217, 72, 15, 0.25);
+  transform: translateY(-1px);
 }
 
-/* Decorative Starburst / Ashok Chakra subtle motif */
-.chakra-pattern {
-  background-image: radial-gradient(#138A36 1px, transparent 1px), radial-gradient(#FF6B00 1px, transparent 1px);
-  background-size: 24px 24px;
-  background-position: 0 0, 12px 12px;
+.neo-button-primary:active,
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.neo-button-primary:focus-visible,
+.btn-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.35);
+}
+
+/* Green Accessible Buttons */
+.neo-button-green,
+.btn-green {
+  background-color: #138A36;
+  color: #FFFFFF;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 2px rgba(19, 138, 54, 0.2);
+  border-radius: 0.75rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.neo-button-green:hover,
+.btn-green:hover {
+  background-color: #075E2A;
+  box-shadow: 0 4px 8px rgba(19, 138, 54, 0.25);
+  transform: translateY(-1px);
+}
+
+.neo-button-green:focus-visible,
+.btn-green:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(19, 138, 54, 0.35);
+}
+
+/* Secondary Accessible Buttons */
+.neo-button-secondary,
+.btn-secondary {
+  background-color: #FFFFFF;
+  color: #1C211D;
+  font-weight: 600;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  border-radius: 0.75rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.neo-button-secondary:hover,
+.btn-secondary:hover {
+  background-color: #F6F8F5;
+  border-color: #D1D7CE;
+  color: #1C211D;
+}
+
+.neo-button-secondary:focus-visible,
+.btn-secondary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(28, 33, 29, 0.15);
+}
+
+/* Accessible Form Inputs */
+.neo-input,
+.minimal-input {
+  border: 1px solid var(--color-border);
+  background-color: #FFFFFF;
+  color: #1C211D;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: all 0.15s ease-in-out;
+}
+
+.neo-input:focus,
+.minimal-input:focus {
+  outline: none;
+  border-color: #FF6B00;
+  box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.2);
+}
+
+/* Subtle neo-box class backward compatibility gracefully aliased to accessible minimalism */
+.neo-box,
+.neo-box-orange,
+.neo-box-green {
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 1px 3px rgba(28, 33, 29, 0.05);
+  border-radius: 1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.neo-box:hover,
+.neo-box-orange:hover,
+.neo-box-green:hover {
+  border-color: #D1D7CE;
+  box-shadow: 0 4px 12px rgba(28, 33, 29, 0.08);
 }

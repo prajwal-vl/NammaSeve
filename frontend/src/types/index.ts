@@ -1,4 +1,4 @@
-// Core TypeScript Types for NammaSeve
+// Core TypeScript Types for NammaSeve — Accessible Minimalist Civic Platform
 
 export type Language = 'en' | 'kn';
 
@@ -82,6 +82,15 @@ export interface Scheme {
   application_steps: string[];
   documents_required: string[];
   official_application_url: string;
+  official_info_url?: string;
+  application_method?: 'online' | 'offline' | 'kiosk' | 'both';
+  is_stale?: boolean;
+  effective_from?: string;
+  effective_to?: string;
+  source_identifier?: string;
+  provider_id?: string;
+  last_fetched_at?: string;
+  last_verified_at?: string;
   status: 'draft' | 'published' | 'archived';
   imported_at?: string;
   created_at?: string;
@@ -112,10 +121,14 @@ export interface SchemeSource {
   notes?: string;
 }
 
+// Exactly specified deterministic eligibility statuses
 export type EligibilityStatus = 
-  | 'eligible'
+  | 'eligible_based_on_available_information'
   | 'potentially_eligible'
   | 'insufficient_information'
+  | 'not_eligible_based_on_known_criteria'
+  // Backward compatibility aliases:
+  | 'eligible'
   | 'not_eligible';
 
 export interface EligibilityEvaluation {
@@ -134,3 +147,90 @@ export interface SavedScheme {
   created_at: string;
   scheme?: Scheme;
 }
+
+export interface IngestionRun {
+  id: string;
+  provider_id: string;
+  provider_name: string;
+  status: 'started' | 'completed' | 'failed' | 'partial';
+  records_fetched: number;
+  records_validated: number;
+  records_imported: number;
+  duplicates_detected: number;
+  errors: string[];
+  sync_metadata?: Record<string, unknown>;
+  started_at: string;
+  completed_at?: string;
+}
+
+export interface ProviderMetadata {
+  id: string;
+  name: string;
+  description: string;
+  portal_url: string;
+  is_configured: boolean;
+  requires_mou_or_approval: boolean;
+  auth_method: string;
+  doc_url: string;
+  env_keys: string[];
+}
+
+export interface StructuredAiExplanation {
+  summary: string;
+  key_benefits: string[];
+  eligibility_clarification: string;
+  application_guidance: string;
+  relevant_profile_factors: string[];
+  follow_up_questions_for_missing_info: string[];
+  official_sources: Array<{ publisher: string; url: string; verification_status: string }>;
+  is_ai_generated: boolean;
+  model_used: string;
+  notice?: string;
+}
+
+export type LiveEligibilityStatus = 
+  | 'potentially_eligible'
+  | 'insufficient_information'
+  | 'not_eligible_based_on_verified_criteria'
+  | 'eligibility_unverified'
+  | 'eligible_based_on_available_information';
+
+export interface DiscoveredScheme {
+  name: string;
+  summary: string;
+  government_level: 'central' | 'state';
+  department: string | null;
+  state_applicability: string[];
+  benefits: string[];
+  eligibility_requirements: string[];
+  application_steps: string[];
+  required_documents: string[];
+  application_url: string | null;
+  source_url: string;
+  source_type: 'official' | 'department_order' | 'portal' | 'other';
+  eligibility_status: LiveEligibilityStatus;
+  matched_criteria: string[];
+  missing_criteria: string[];
+  unknown_fields: string[];
+  last_checked_at: string;
+  is_official_domain?: boolean;
+}
+
+export interface DiscoverSchemesResponse {
+  results: DiscoveredScheme[];
+  search_status: 'success' | 'partial' | 'empty' | 'unconfigured_key' | 'browser_search_unavailable' | 'error';
+  search_notes: string[];
+  query_summary: string;
+  cached: boolean;
+  model_used?: string;
+}
+
+export interface SearchHistoryItem {
+  id: string;
+  user_id: string;
+  query_summary: string;
+  criteria: Partial<UserProfile>;
+  results_count: number;
+  created_at: string;
+}
+

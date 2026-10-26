@@ -12,20 +12,20 @@ export const AboutPage: React.FC = () => {
         <MaximalistBadge variant="green">
           Civic Mission
         </MaximalistBadge>
-        <h1 className="text-3xl sm:text-5xl font-heading font-black text-dark-text tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-heading font-extrabold text-slate-900 tracking-tight">
           About NammaSeve (ನಮ್ಮ ಸೇವೆ)
         </h1>
-        <p className="text-base sm:text-lg text-muted-text max-w-2xl mx-auto leading-relaxed">
+        <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
           Bridging the gap between Indian government welfare policies and the everyday citizens who qualify for them.
         </p>
       </div>
 
-      <div className="bg-white border-4 border-dark-text shadow-neo-xl rounded-2xl p-6 sm:p-10 space-y-6">
-        <h3 className="text-2xl font-heading font-black text-dark-text">
+      <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 sm:p-10 space-y-6">
+        <h3 className="text-2xl font-heading font-bold text-slate-900">
           Our Guiding Principles
         </h3>
         
-        <div className="space-y-4 text-sm sm:text-base text-dark-text leading-relaxed">
+        <div className="space-y-4 text-sm sm:text-base text-slate-700 leading-relaxed">
           <p>
             Millions of rupees in government welfare subsidies, youth stipends, farmer incentives, and healthcare schemes remain unclaimed each year because citizens either do not know about them or find eligibility guidelines overwhelming.
           </p>
@@ -34,16 +34,16 @@ export const AboutPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t-2 border-gray-200">
-          <div className="p-4 bg-warm-white border-2 border-dark-text rounded-xl space-y-1">
-            <span className="font-bold text-dark-text block">100% Free & Open</span>
-            <p className="text-xs text-muted-text">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-200">
+          <div className="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+            <span className="font-semibold text-slate-900 block text-sm">100% Free & Open</span>
+            <p className="text-xs text-slate-600 leading-relaxed">
               Zero monetization, no paid consultations, and no paywalls for discovering welfare benefits.
             </p>
           </div>
-          <div className="p-4 bg-warm-white border-2 border-dark-text rounded-xl space-y-1">
-            <span className="font-bold text-dark-text block">Zero Aadhaar Storage</span>
-            <p className="text-xs text-muted-text">
+          <div className="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+            <span className="font-semibold text-slate-900 block text-sm">Zero Aadhaar Storage</span>
+            <p className="text-xs text-slate-600 leading-relaxed">
               We never collect biometric data or sensitive identifiers. We calculate general eligibility and connect you to official government websites to apply directly.
             </p>
           </div>

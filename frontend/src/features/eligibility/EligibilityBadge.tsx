@@ -16,45 +16,48 @@ export const EligibilityBadge: React.FC<EligibilityBadgeProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const configs: Record<
-    EligibilityStatus,
-    { label: string; bg: string; text: string; border: string; icon: React.ReactNode }
-  > = {
-    eligible: {
-      label: t('eligibility.eligible', 'Eligible based on available information'),
-      bg: 'bg-indian-green-100',
-      text: 'text-indian-green-900',
-      border: 'border-indian-green',
-      icon: <CheckCircle2 className="w-4 h-4 text-indian-green" />,
-    },
-    potentially_eligible: {
+  const isEligible = status === 'eligible' || status === 'eligible_based_on_available_information';
+  const isNotEligible = status === 'not_eligible' || status === 'not_eligible_based_on_known_criteria';
+  const isPotentially = status === 'potentially_eligible';
+  const isInsufficient = status === 'insufficient_information';
+
+  let config = {
+    label: t('eligibility.eligible', 'Eligible based on available information'),
+    bg: 'bg-indian-green-50',
+    text: 'text-indian-green-900',
+    border: 'border-indian-green-200',
+    icon: <CheckCircle2 className="w-3.5 h-3.5 text-indian-green" />,
+  };
+
+  if (isPotentially) {
+    config = {
       label: t('eligibility.potentially_eligible', 'Potentially eligible — verification required'),
-      bg: 'bg-amber-100',
+      bg: 'bg-amber-50',
       text: 'text-amber-900',
-      border: 'border-amber-500',
-      icon: <AlertCircle className="w-4 h-4 text-amber-600" />,
-    },
-    insufficient_information: {
+      border: 'border-amber-200',
+      icon: <AlertCircle className="w-3.5 h-3.5 text-amber-600" />,
+    };
+  } else if (isInsufficient) {
+    config = {
       label: t('eligibility.insufficient_information', 'Insufficient information'),
       bg: 'bg-blue-50',
       text: 'text-blue-900',
-      border: 'border-blue-500',
-      icon: <HelpCircle className="w-4 h-4 text-blue-600" />,
-    },
-    not_eligible: {
+      border: 'border-blue-200',
+      icon: <HelpCircle className="w-3.5 h-3.5 text-blue-600" />,
+    };
+  } else if (isNotEligible) {
+    config = {
       label: t('eligibility.not_eligible', 'Not eligible based on documented criteria'),
       bg: 'bg-gray-100',
       text: 'text-gray-800',
-      border: 'border-gray-500',
-      icon: <XCircle className="w-4 h-4 text-gray-600" />,
-    },
-  };
-
-  const config = configs[status] || configs.insufficient_information;
+      border: 'border-gray-200',
+      icon: <XCircle className="w-3.5 h-3.5 text-gray-500" />,
+    };
+  }
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border-2 font-bold text-xs sm:text-sm tracking-wide ${config.bg} ${config.text} ${config.border} shadow-[2px_2px_0px_#20241F] ${className}`}
+      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs sm:text-sm font-semibold tracking-normal ${config.bg} ${config.text} ${config.border} shadow-2xs ${className}`}
     >
       {showIcon && config.icon}
       <span>{config.label}</span>
