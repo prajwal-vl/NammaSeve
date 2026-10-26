@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+**/node_modules/
+.pnp
+.pnp.js
+
+# Production builds
+dist/
+**/dist/
+build/
+**/build/
+
+# Environment Variables & Secrets (CRITICAL SECURITY)
+.env
+**/.env
+.env.local
+**/.env.local
+.env.*.local
+**/.env.*.local
+*.local
+supabase/.temp/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Test coverage & Logs
+coverage/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Supabase local generated
+.supabase/

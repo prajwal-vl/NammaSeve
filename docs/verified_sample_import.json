@@ -1,0 +1,177 @@
+[
+  {
+    "slug": "karnataka-gruha-lakshmi",
+    "name": "Gruha Lakshmi Scheme",
+    "kannada_name": "ಗೃಹ ಲಕ್ಷ್ಮಿ ಯೋಜನೆ",
+    "description": "Monthly financial assistance of ₹2,000 via Direct Benefit Transfer (DBT) directly into the bank account of the woman head of eligible households in Karnataka.",
+    "kannada_description": "ಕರ್ನಾಟಕದ ಅರ್ಹ ಕುಟುಂಬಗಳ ಮಹಿಳಾ ಮುಖ್ಯಸ್ಥರಿಗೆ ನೇರ ನಗದು ವರ್ಗಾವಣೆ (DBT) ಮೂಲಕ ಪ್ರತಿ ತಿಂಗಳು ₹2,000 ಆರ್ಥಿಕ ನೆರವು.",
+    "scheme_level": "state",
+    "state_code": "KA",
+    "department": "Department of Women and Child Development, Karnataka",
+    "kannada_department": "ಮಹಿಳಾ ಮತ್ತು ಮಕ್ಕಳ ಅಭಿವೃದ್ಧಿ ಇಲಾಖೆ, ಕರ್ನಾಟಕ ಸರ್ಕಾರ",
+    "category": "Women & Family Welfare",
+    "benefits": [
+      "₹2,000 per month credited directly to woman head of family bank account",
+      "Direct Benefit Transfer (DBT) linked to Aadhaar without intermediary deduction",
+      "Financial independence and improved household livelihood security"
+    ],
+    "eligibility_summary": "Woman head of household named on BPL, Antyodaya (AAY), or APL ration cards in Karnataka. Neither the woman nor her spouse must be an income tax payer or GST filer.",
+    "kannada_eligibility_summary": "ಕರ್ನಾಟಕದಲ್ಲಿ ಬಿಪಿಎಲ್, ಅಂತ್ಯೋದಯ ಅಥವಾ ಎಪಿಎಲ್ ಪಡಿತರ ಚೀಟಿಯಲ್ಲಿ ಮಹಿಳಾ ಮುಖ್ಯಸ್ಥರಾಗಿ ಹೆಸರಿಸಿರಬೇಕು. ಕುಟುಂಬವು ಆದಾಯ ತೆರಿಗೆದಾರರಾಗಿರಬಾರದು.",
+    "application_steps": [
+      "Confirm name as head of family on BPL / AAY / APL ration card",
+      "Visit official Seva Sindhu portal or Grama One / Karnataka One center",
+      "Authenticate with Aadhaar and enter ration card number",
+      "Collect printed registration acknowledgement"
+    ],
+    "documents_required": [
+      "Aadhaar Card of Woman Head",
+      "Ration Card (BPL / Antyodaya / APL)",
+      "Bank Account Passbook (Aadhaar linked)",
+      "Mobile Number"
+    ],
+    "official_application_url": "https://sevasindhuservices.karnataka.gov.in/",
+    "status": "published",
+    "sources": [
+      {
+        "publisher": "Government of Karnataka - Seva Sindhu",
+        "source_url": "https://sevasindhuservices.karnataka.gov.in/",
+        "source_type": "official_portal",
+        "verification_status": "verified",
+        "notes": "Verified official enrollment portal for Gruha Lakshmi"
+      }
+    ],
+    "rules": [
+      {
+        "rule_type": "gender",
+        "required_attribute": "gender",
+        "operator": "eq",
+        "rule_value": "female",
+        "source_reference": "G.O. No. WCD 120 MMB 2023"
+      },
+      {
+        "rule_type": "state",
+        "required_attribute": "state",
+        "operator": "eq",
+        "rule_value": "Karnataka",
+        "source_reference": "Karnataka Gruha Lakshmi Guidelines 2023"
+      }
+    ]
+  },
+  {
+    "slug": "karnataka-yuva-nidhi",
+    "name": "Yuva Nidhi Scheme",
+    "kannada_name": "ಯುವ ನಿಧಿ ಯೋಜನೆ",
+    "description": "Monthly unemployment allowance of ₹3,000 for degree holders and ₹1,500 for diploma holders in Karnataka graduating in academic year 2022-23 onwards.",
+    "kannada_description": "ಕರ್ನಾಟಕದ ನಿರುದ್ಯೋಗಿ ಪದವೀಧರರಿಗೆ ತಿಂಗಳಿಗೆ ₹3,000 ಹಾಗೂ ಡಿಪ್ಲೊಮಾ ಪಾಸಾದವರಿಗೆ ತಿಂಗಳಿಗೆ ₹1,500 ನಿರುದ್ಯೋಗ ಭತ್ಯೆ.",
+    "scheme_level": "state",
+    "state_code": "KA",
+    "department": "Skill Development, Entrepreneurship and Livelihood Department, Karnataka",
+    "kannada_department": "ಕೌಶಲ್ಯಾಭಿವೃದ್ಧಿ, ಉದ್ಯಮಶೀಲತೆ ಮತ್ತು ಜೀವನೋಪಾಯ ಇಲಾಖೆ",
+    "category": "Youth & Education",
+    "benefits": [
+      "₹3,000 per month for unemployed graduates",
+      "₹1,500 per month for unemployed diploma holders",
+      "Tenure: Up to 2 years or until employment is secured",
+      "Free enrollment in Karnataka Skill Development Corporation training"
+    ],
+    "eligibility_summary": "Graduates and diploma holders domiciled in Karnataka for at least 6 years who completed studies in academic year 2022-23 or later and remain unemployed for 180 days.",
+    "kannada_eligibility_summary": "ಕರ್ನಾಟಕದ ನಿವಾಸಿಗಳು, 2022-23 ಅಥವಾ ನಂತರ ಪದವಿ/ಡಿಪ್ಲೊಮಾ ಪಾಸಾಗಿ 180 ದಿನಗಳಿಂದ ನಿರುದ್ಯೋಗಿಯಾಗಿರುವವರು.",
+    "application_steps": [
+      "Have degree/diploma certificate and marks cards ready",
+      "Log into Seva Sindhu portal and navigate to Yuva Nidhi registration",
+      "Verify Aadhaar and Karnataka study certificate",
+      "Declare current unemployment status and submit linked bank details"
+    ],
+    "documents_required": [
+      "Degree or Diploma Certificate",
+      "Aadhaar Card",
+      "Karnataka Study Certificate (minimum 6 years)",
+      "Bank Passbook copy"
+    ],
+    "official_application_url": "https://sevasindhuservices.karnataka.gov.in/",
+    "status": "published",
+    "sources": [
+      {
+        "publisher": "Skill Development Department, Karnataka",
+        "source_url": "https://sevasindhuservices.karnataka.gov.in/",
+        "source_type": "official_portal",
+        "verification_status": "verified",
+        "notes": "Official Yuva Nidhi DBT portal"
+      }
+    ],
+    "rules": [
+      {
+        "rule_type": "state",
+        "required_attribute": "state",
+        "operator": "eq",
+        "rule_value": "Karnataka",
+        "source_reference": "Notification No. SDEL/YN/2023"
+      },
+      {
+        "rule_type": "min_age",
+        "required_attribute": "age",
+        "operator": "gte",
+        "rule_value": "18",
+        "source_reference": "Yuva Nidhi Operational Manual"
+      },
+      {
+        "rule_type": "occupation",
+        "required_attribute": "occupation",
+        "operator": "eq",
+        "rule_value": "unemployed",
+        "source_reference": "Yuva Nidhi Criteria Clause 4"
+      }
+    ]
+  },
+  {
+    "slug": "pm-kisan-samman-nidhi",
+    "name": "PM-KISAN (Pradhan Mantri Kisan Samman Nidhi)",
+    "kannada_name": "ಪಿಎಂ-ಕಿಸಾನ್ ಸಮ್ಮಾನ್ ನಿಧಿ",
+    "description": "Direct income support of ₹6,000 per year in three equal 4-monthly installments of ₹2,000 directly into the bank accounts of all landholding farmer families across India.",
+    "kannada_description": "ದೇಶದ ಎಲ್ಲಾ ಜಮೀನು ಹೊಂದಿರುವ ರೈತ ಕುಟುಂಬಗಳಿಗೆ ವರ್ಷಕ್ಕೆ ₹6,000 (ಮೂರು ಕಂತುಗಳಲ್ಲಿ ತಲಾ ₹2,000) ಆರ್ಥಿಕ ನೆರವು.",
+    "scheme_level": "central",
+    "state_code": "IN",
+    "department": "Ministry of Agriculture & Farmers Welfare, Government of India",
+    "kannada_department": "ಕೃಷಿ ಮತ್ತು ರೈತರ ಕಲ್ಯಾಣ ಸಚಿವಾಲಯ, ಭಾರತ ಸರ್ಕಾರ",
+    "category": "Agriculture & Farming",
+    "benefits": [
+      "₹6,000 annual financial assistance in three installments of ₹2,000 each",
+      "Direct DBT transfer via Aadhaar payment bridge",
+      "Financial assistance for agricultural seeds, fertilizers, and seasonal expenses"
+    ],
+    "eligibility_summary": "All farmer families with cultivable landholding in their names. Excludes institutional landholders, constitutional post holders, income tax payers, and government servants.",
+    "kannada_eligibility_summary": "ತಮ್ಮ ಹೆಸರಿನಲ್ಲಿ ಸಾಗುವಳಿ ಮಾಡಬಹುದಾದ ಜಮೀನು ಹೊಂದಿರುವ ರೈತ ಕುಟುಂಬಗಳು. ಆದಾಯ ತೆರಿಗೆ ಪಾವತಿದಾರರಿಗೆ ಅನ್ವಯಿಸುವುದಿಲ್ಲ.",
+    "application_steps": [
+      "Visit pmkisan.gov.in and click Farmers Corner > New Farmer Registration",
+      "Enter Aadhaar and select State and District",
+      "Enter land survey and land record (Pahani / RTC / Khata) details",
+      "Complete OTP eKYC verification"
+    ],
+    "documents_required": [
+      "Aadhaar Card",
+      "Land Record (RTC / Pahani / Patta)",
+      "Bank Passbook (Aadhaar linked)",
+      "Active Mobile Number"
+    ],
+    "official_application_url": "https://pmkisan.gov.in/",
+    "status": "published",
+    "sources": [
+      {
+        "publisher": "Ministry of Agriculture & Farmers Welfare",
+        "source_url": "https://pmkisan.gov.in/",
+        "source_type": "official_portal",
+        "verification_status": "verified",
+        "notes": "PM KISAN National Portal"
+      }
+    ],
+    "rules": [
+      {
+        "rule_type": "is_farmer",
+        "required_attribute": "is_farmer",
+        "operator": "eq",
+        "rule_value": "true",
+        "source_reference": "PM-KISAN Guidelines Clause 2"
+      }
+    ]
+  }
+]
